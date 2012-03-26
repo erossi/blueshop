@@ -19,11 +19,8 @@ import sys
 import os
 import bottle
 
-root = os.path.dirname(__file__)
-app = os.path.join(root, 'bin')
-
-os.chdir(root)
-sys.path.append(app)
+os.chdir(os.path.dirname(__file__))
+sys.path.append(os.path.dirname(__file__))
 
 import blueshop
 

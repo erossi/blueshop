@@ -12,6 +12,7 @@ class UserDb:
 
     _conn = None
     _cur = None
+    _config = None
 
     # Attribute Users present in the db.
     users = {}
@@ -60,7 +61,8 @@ class UserDb:
         self.users['promo'] = self._cur.fetchone()[0]
 
     def __init__(self, config):
-        self._conn = sqlite3.connect('db/users.sqlite3')
+        self._config = config
+        self._conn = sqlite3.connect(self._config.db['users'])
         self._cur = self._conn.cursor()
         self._update_attributes()
 

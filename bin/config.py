@@ -23,10 +23,15 @@ class Config:
     Default configurations.
     """
 
-    _config_path = ('/etc/blueshop',
-            '/usr/local/etc/blueshop',
-            '~/.blueshop',
-            './cfg')
+    if os.getenv('BLUESHOP_CFG'):
+        _config_path = (os.getenv('BLUESHOP_CFG'),)
+    else:
+        _config_path = ('/etc/blueshop',
+                '/usr/local/etc/blueshop',
+                '~/.blueshop',
+                './cfg')
+
+    print "Configurations path: " + str(_config_path)
 
     config = None
     path = {}
