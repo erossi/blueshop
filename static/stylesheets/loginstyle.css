@@ -1,0 +1,68 @@
+#main {
+  background-image: url("/images/main_page_logo.png");
+  background-repeat: no-repeat;
+  height: 450px;
+}
+
+#registrazione {
+  position: absolute;
+  width: 250px;
+  height: 200px;
+  top: 15px;
+  left: 10px;
+  text-align: left;
+}
+
+#login {
+  position: absolute;
+  width: 250px;
+  height: 200px;
+  top: 15px;
+  left: 520px;
+  text-align: right;
+}
+
+#recuperopassword {
+  position: absolute;
+  width: 250px;
+  height: 200px;
+  top: 250px;
+  left: 520px;
+  text-align: right;
+}
+
+#chisiamo {
+  position: absolute;
+  width: 250px;
+  height: 200px;
+  top: 250px;
+  left: 10px;
+  text-align: left;
+}
+
+#notice {
+  position: absolute;
+  width: 10em;
+  height: 5em;
+  top: 130px;
+  left: 605px;
+  text-align: right;
+  font-size: 1.5em;
+  background-image: none;
+  padding: 0;
+  color: green;
+}
+
+#error {
+  position: absolute;
+  width: 10em;
+  height: 5em;
+  top: 130px;
+  left: 605px;
+  text-align: right;
+  font-size: 1.5em;
+  background-image: none;
+  padding: 0;
+  color: red;
+}
+

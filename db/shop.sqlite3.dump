@@ -1,0 +1,9 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE "categories" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "codice_cat" varchar(3) DEFAULT NULL NULL, "descrizione" varchar(50) NOT NULL, "created_at" datetime DEFAULT NULL NULL, "updated_at" datetime DEFAULT NULL NULL);
+INSERT INTO "categories" VALUES(1,'0','Offerte',NULL,'2008-10-04 16:38:14');
+CREATE TABLE "articles" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "category_id" integer DEFAULT NULL NULL, "codice_cat" varchar(3) DEFAULT NULL NULL, "codice_art" varchar(15) NOT NULL, "descrizione" varchar(50) NOT NULL, "descrizione2" varchar(50) DEFAULT NULL NULL, "qta" integer DEFAULT NULL NULL, "price" decimal(8,2) DEFAULT NULL NULL, "price1" decimal(8,2) DEFAULT NULL NULL, "price2" decimal(8,2) DEFAULT NULL NULL, "price3" decimal(8,2) DEFAULT NULL NULL, "price4" decimal(8,2) DEFAULT NULL NULL, "info" text DEFAULT NULL NULL, "image_path" varchar(50) DEFAULT NULL NULL, "promo" boolean DEFAULT 'f' NULL, "promo_price" decimal(8,2) DEFAULT NULL NULL, "promo_qta" integer DEFAULT NULL NULL, "order_days" integer DEFAULT NULL NULL, "created_at" datetime DEFAULT NULL NULL, "updated_at" datetime DEFAULT NULL NULL);
+DELETE FROM sqlite_sequence;
+INSERT INTO "sqlite_sequence" VALUES('categories',1);
+INSERT INTO "sqlite_sequence" VALUES('articles',0);
+COMMIT;
