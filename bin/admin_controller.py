@@ -115,6 +115,11 @@ class Admin:
             code_cat = row[6].strip()
             qta = int(row[3])
 
+            # Unicode fixer in case some string contains bad chars
+            row[0] = unicode(row[0], errors='replace')
+            row[1] = unicode(row[1], errors='replace')
+            row[2] = unicode(row[2], errors='replace')
+
             if code_cat in mycat:
                 cat_id = mycat[code_cat]
             else:
@@ -149,6 +154,12 @@ class Admin:
             price1 = float(string.replace(row[4], ',', '.'))
             price2 = float(string.replace(row[5], ',', '.'))
             qta = int(row[3])
+
+            # Unicode fixer in case some string contains bad chars
+            row[0] = unicode(row[0], errors='replace')
+            row[1] = unicode(row[1], errors='replace')
+            row[2] = unicode(row[2], errors='replace')
+
             this_item = [None, cat_id, code_cat, row[0].strip(),
                     row[1].strip(), row[2].strip(), qta,
                     None, price1, price2]
