@@ -59,9 +59,9 @@ class MailUtils:
         # Create a text/plain message
         msg = template('mail/recover_password', tpldata=myuser)
         msg = MIMEText(msg)
-        msg['Subject'] = 'Recupero password'
-        msg['From'] = self._config.mail['from']
+        msg['From'] = self._config.mail['recover_pwd_from']
         msg['To'] = myuser[0]
+        msg['Subject'] = self._config.mail['recover_pwd_subject']
         composed = msg.as_string()
         ok = self._send(msg['from'], msg['To'], composed)
         return(ok)
@@ -75,9 +75,9 @@ class MailUtils:
         # Create a text/plain message
         msg = template('mail/new_user_request', tpldata=myuser)
         msg = MIMEText(msg)
-        msg['Subject'] = 'Nuovo Utente'
-        msg['From'] = self._config.mail['from']
-        msg['To'] = self._config.mail['to_adduser']
+        msg['From'] = self._config.mail['newuser_from']
+        msg['To'] = self._config.mail['newuser_to']
+        msg['Subject'] = self._config.mail['newuser_subject']
         composed = msg.as_string()
         ok = self._send(msg['from'], msg['To'], composed)
         return(ok)
@@ -89,18 +89,18 @@ class MailUtils:
         # Create a text/plain message
         msg = template('mail/shop_send_order', tpldata=tpldata)
         msg = MIMEText(msg)
-        msg['Subject'] = 'Nuovo Ordine'
-        msg['From'] = self._config.mail['from']
+        msg['From'] = self._config.mail['neworder_from']
         msg['To'] = tpldata['user']['email']
-        bcc = (self._config.mail['shop_order'], msg['To'])
+        msg['Subject'] = self._config.mail['neworder_subject']
+        bcc = (self._config.mail['neworder_bcc'], msg['To'])
         composed = msg.as_string()
         ok = self._send(msg['from'], bcc, composed)
         return(ok)
 
     def pricelists(self, filetosend, emails, subject, msg):
         outer = MIMEMultipart()
-        outer['From'] = self._config.mail['from']
-        outer['To'] = self._config.mail['to']
+        outer['From'] = self._config.mail['pricelist_from']
+        outer['To'] = self._config.mail['pricelist_to']
         outer['Subject'] = subject
         outer.preamble = 'This is a multi-part message in MIME format.\n'
         # Attach text message
@@ -150,8 +150,8 @@ class MailUtils:
         """
         # Create a text/plain message
         msg = MIMEText(msg)
-        msg['From'] = self._config.mail['from']
-        msg['To'] = self._config.mail['to']
+        msg['From'] = self._config.mail['promo_from']
+        msg['To'] = self._config.mail['promo_to']
         msg['Subject'] = subject
 
         composed = msg.as_string()

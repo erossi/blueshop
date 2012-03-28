@@ -1,0 +1,20 @@
+sqlite3 shop.sqlite3 < /usr/local/share/blueshop/db/shop.sqlite3.dump 
+sqlite3 production.sqlite3 ".dump categories" > dump.txt
+remove from dump the CREATE TABLE and INSERT offerte.
+sqlite3 shop.sqlite3 < dump.txt 
+sqlite3 production.sqlite3 ".dump articles" > dump.txt 
+remove from dump the CREATE TABLE.
+sqlite3 shop.sqlite3 < dump.txt
+chown www-data: shop.sqlite3
+cp /usr/local/share/blueshop/db/users.sqlite3.dump ./
+remove first admin user and reset sequence counter to 0.
+sqlite3 users.sqlite3 < users.sqlite3.dump 
+sqlite3 production.sqlite3 ".dump users" > dump.txt 
+remove from dump the CREATE TABLE
+sqlite3 users.sqlite3 < dump.txt 
+chown www-data: users.sqlite3
+
+Sync the categories images with:
+rsync -cnrlv 88.58.229.218:/var/www/rails/public/images/categories/ /var/www/bluetechinformatica.com/overlay/images/categories/
+
+

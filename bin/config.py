@@ -36,6 +36,7 @@ class Config:
     config = None
     path = {}
     db = {}
+    users = {}
     pricelists = {}
     promo = {}
     mail = {}
@@ -58,6 +59,7 @@ class Config:
             self.config.read(filename)
             self.path = dict(self.config.items('path'))
             self.db = dict(self.config.items('db'))
+            self.users = dict(self.config.items('users'))
             self.pricelists = dict(self.config.items('pricelists'))
             self.promo = dict(self.config.items('promo'))
             self.mail = dict(self.config.items('mail'))

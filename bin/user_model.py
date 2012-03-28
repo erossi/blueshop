@@ -16,6 +16,7 @@ class UserDb:
 
     # Attribute Users present in the db.
     users = {}
+    # sane defaults if not specified in the cfg file.
     users['paginate'] = 5
 
     def _adjust_cursors(self, cursor, total):
@@ -62,6 +63,7 @@ class UserDb:
 
     def __init__(self, config):
         self._config = config
+        self.users['paginate'] = int(self._config.users['paginate'])
         self._conn = sqlite3.connect(self._config.db['users'])
         self._cur = self._conn.cursor()
         self._update_attributes()
