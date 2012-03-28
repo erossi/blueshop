@@ -46,7 +46,8 @@ shop = shop_controller.Shop(shopdb, mail, config)
 admin = admin_controller.Admin(shopdb, config)
 fieldparser = parser_controller.FieldParser()
 
-debug(True)
+# Should be moved or activate from ENV or config
+# debug(True)
 
 #
 # Local functions

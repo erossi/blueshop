@@ -52,8 +52,9 @@ class ShopDb:
     def _item_image_filename(self, item):
         """ Get the filename of a given itemcode. """
 
-        if not item[14]:
+        if not item[13]:
             filename = '/categories/' + item[2] + '.png'
+            # add the new element to the list.
             item = item[:13] + (filename,) + item[14:]
 
         return (item)
