@@ -76,7 +76,7 @@ class UserDb:
 
         self._cur.execute("select id, ragsoc, email, \
                 listino, admin from users where email=? and password=? \
-                and status='a'", (username, password))
+                and web_access='t'", (username, password))
         rawuser = self._cur.fetchone()
         myuser = {}
 
