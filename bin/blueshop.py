@@ -20,7 +20,7 @@ bluEShop python release.
 
 __author__ = "Enrico Rossi <e.rossi@tecnobrain.com>"
 __date__ = "20 Feb 2012"
-__version__ = "$Revision: 0.1b $"
+__version__ = "$Revision: 0.1$"
 __credits__ = """ Blue Tech Informatica s.r.l. """
 
 import os
@@ -46,8 +46,9 @@ shop = shop_controller.Shop(shopdb, mail, config)
 admin = admin_controller.Admin(shopdb, config)
 fieldparser = parser_controller.FieldParser()
 
-# Should be moved or activate from ENV or config
-# debug(True)
+# Activate debug mode
+if os.getenv('BLUESHOP_DEBUG'):
+    debug(True)
 
 #
 # Local functions
@@ -100,6 +101,10 @@ def index():
 @app.route('/main/contacts')
 def main_contacts():
     return template('main/contacts')
+
+@app.route('/main/about')
+def main_about():
+    return template('main/about')
 
 @app.route('/main/recover_password', method='get')
 def recover_password():
