@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# coding: utf-8
+
 # Copyright (C) 2012 Enrico Rossi
 #
 # This program is free software: you can redistribute it and/or modify
@@ -15,16 +17,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-bluEShop python release.
+BluShop python release.
 """
 
 __author__ = "Enrico Rossi <e.rossi@tecnobrain.com>"
 __date__ = "20 Feb 2012"
-__version__ = "$Revision: 0.1$"
+__version__ = "Rev: 0.2"
 __credits__ = """ Blue Tech Informatica s.r.l. """
 
 import os
-from bottle import Bottle
+from bottle import Bottle, TEMPLATE_PATH
 from bottle import route, run, template, get, post, request, response
 from bottle import redirect, static_file, debug
 import shop_model
@@ -49,6 +51,9 @@ fieldparser = parser_controller.FieldParser()
 # Activate debug mode
 if os.getenv('BLUESHOP_DEBUG'):
     debug(True)
+
+# Define template path
+TEMPLATE_PATH.insert(0, os.path.join(config.path['overlay'], 'views'))
 
 #
 # Local functions

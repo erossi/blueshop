@@ -43,9 +43,15 @@ class User:
         return (string)
 
     def set_cookie(self, urecord):
+        """
+        Set the cookie to keep the connection opened.
+        The timeout should be configurable in the config file, not
+        hardcoded here.
+        """
+
         if urecord:
-            #response.set_cookie('auth', urecord, max_age=600, path='/', secret=self._secret)
-            response.set_cookie('auth', urecord, path='/', secret=self._secret)
+            response.set_cookie('auth', urecord, max_age=600, path='/', secret=self._secret)
+            #response.set_cookie('auth', urecord, path='/', secret=self._secret)
         else:
             # Remove the cookie, logout
             response.set_cookie('auth', None, max_age=1, path='/', secret=self._secret)

@@ -1,0 +1,10 @@
+.gitignore
+.todo
+MANIFEST
+MANIFEST.in
+setup.py
+*.pyc
+.git/
+debian/
+dist/
+test/

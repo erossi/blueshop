@@ -34,6 +34,7 @@ class Config:
     print "Configurations path: " + str(_config_path)
 
     config = None
+    site = {}
     path = {}
     db = {}
     users = {}
@@ -57,6 +58,7 @@ class Config:
 
         if os.path.isfile(filename):
             self.config.read(filename)
+            self.site = dict(self.config.items('site'))
             self.path = dict(self.config.items('path'))
             self.db = dict(self.config.items('db'))
             self.users = dict(self.config.items('users'))

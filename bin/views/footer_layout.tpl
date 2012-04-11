@@ -1,10 +1,13 @@
+%import blueshop
+%version = blueshop.__version__
+%
 <div id="footer">
   <span style="margin-left: 1em;">
     &copy; Blue Tech s.r.l. - Via della Salute, 20/3/4
     40132 Bologna - Tel. +39051405050 Fax. +390516417198/9
     &nbsp;<a href="mailto:info@bluetechinformatica.com">info@bluetechinformatica.com</a>
   </span>
-  <span style="margin-left: 1em;">(0.1)</span>
+  <span style="margin-left: 1em;">({{version}})</span>
 </div>
 
 <div id="credits">
