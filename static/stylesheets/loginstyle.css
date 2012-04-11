@@ -1,6 +1,7 @@
 #main {
   background-image: url("/images/main_page_logo.png");
   background-repeat: no-repeat;
+  background-size: 800px auto;
   height: 450px;
 }
 
