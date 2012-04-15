@@ -500,7 +500,7 @@ def user_modify():
         user_info['flash'] = None
         tplpage = template('user/modify', tpldata=user_info)
     else:
-        tplpage = "Shit!"
+        tplpage = redirect('/')
 
     return (tplpage)
 
@@ -533,7 +533,7 @@ def user_modify():
         user_info['flash'] = flash
         tplpage = template('user/modify', tpldata=user_info)
     else:
-        tplpage = "Shit!"
+        tplpage = redirect('/')
 
     return (tplpage)
 
@@ -570,7 +570,7 @@ def shop_index():
     if cookie:
         tplpage = shop.index(cookie)
     else:
-        tplpage = "Shit!"
+        tplpage = redirect('/')
 
     return (tplpage)
 
@@ -583,7 +583,7 @@ def shop_index_submit():
         print "FIXME: default category not stored in the cookie"
         tplpage = shop.index(cookie)
     else:
-        tplpage = "Shit!"
+        tplpage = redirect('/')
 
     return (tplpage)
 
@@ -626,7 +626,7 @@ def shop_cart():
         userinfo = user.get_all_infos(uid)
         tplpage = shop.shoppingcart(userinfo)
     else:
-        tplpage = 'Shit'
+        tplpage = redirect('/')
 
     return (tplpage)
 
@@ -642,7 +642,7 @@ def shop_cart():
         userinfo = user.get_all_infos(uid)
         tplpage = shop.shoppingcart(userinfo)
     else:
-        tplpage = 'Shit'
+        tplpage = redirect('/')
 
     return (tplpage)
 
@@ -657,7 +657,7 @@ def shop_checkout():
         user_info['orderinfo'] = request.forms.get('info')
         tplpage = shop.checkout(user_info)
     else:
-        tplpage = 'Shit'
+        tplpage = redirect('/')
 
     return (tplpage)
 
@@ -678,27 +678,33 @@ def shop_support():
     cookie = _auth()
 
     if cookie:
-        return template('store/support', tpldata=cookie[0])
+        tplpage = template('store/support', tpldata=cookie[0])
     else:
-        return ('Shit')
+        tplpage = redirect('/')
+
+    return (tplpage)
 
 @app.route('/shop/info')
 def shop_info():
     cookie = _auth()
 
     if cookie:
-        return template('store/info', tpldata=cookie[0])
+        tplpage = template('store/info', tpldata=cookie[0])
     else:
-        return ('Shit')
+        tplpage = redirect('/')
+
+    return (tplpage)
 
 @app.route('/shop/contacts')
 def shop_contacts():
     cookie = _auth()
 
     if cookie:
-        return template('store/contacts', tpldata=cookie[0])
+        tplpage = template('store/contacts', tpldata=cookie[0])
     else:
-        return ('Shit')
+        tplpage = redirect('/')
+
+    return (tplpage)
 
 # Images route
 @app.route('/images/<filename:re:.*\.png>')
