@@ -184,7 +184,7 @@
        ai sensi dell'articolo 675/96.
        </p>
 
-      <input type="submit" value="Invia la registrazione" />
+      <input type="submit" value="Modifica la registrazione" />
     </div>
   </div>
   </form>
