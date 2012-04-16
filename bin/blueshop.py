@@ -22,8 +22,10 @@ BluShop python release.
 
 __author__ = "Enrico Rossi <e.rossi@tecnobrain.com>"
 __date__ = "20 Feb 2012"
-__version__ = "Rev: 0.2"
 __credits__ = """ Blue Tech Informatica s.r.l. """
+
+import version
+__version__ = version._version_
 
 import os
 from bottle import Bottle, TEMPLATE_PATH

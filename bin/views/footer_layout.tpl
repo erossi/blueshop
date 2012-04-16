@@ -1,5 +1,5 @@
-%import blueshop
-%version = blueshop.__version__
+%import version
+%version = version._version_
 %
 <div id="footer">
   <span style="margin-left: 1em;">
