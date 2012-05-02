@@ -76,7 +76,7 @@ def _admin_auth():
 
     cookie = _auth()
 
-    if cookie[0]['admin'] == 't':
+    if cookie and (cookie[0]['admin'] == 't'):
         return (cookie)
     else:
         return (None)
