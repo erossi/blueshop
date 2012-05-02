@@ -50,8 +50,13 @@ class User:
         """
 
         if urecord:
-            response.set_cookie('auth', urecord, max_age=600, path='/', secret=self._secret)
-            #response.set_cookie('auth', urecord, path='/', secret=self._secret)
+
+            # if there is a timeout then set it.
+            if self._config.users['cookie_timeout']:
+                response.set_cookie('auth', urecord, max_age=self._config.users['cookie_timeout'], path='/', secret=self._secret)
+            # else set a non-timeout cookie.
+            else:
+                response.set_cookie('auth', urecord, path='/', secret=self._secret)
         else:
             # Remove the cookie, logout
             response.set_cookie('auth', None, max_age=1, path='/', secret=self._secret)

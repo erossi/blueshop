@@ -21,6 +21,11 @@ import ConfigParser
 class Config:
     """
     Default configurations.
+
+    Search for configuration file into fixed path or the
+    environ BLUESHOP_CFG path.
+    Read the configuration from the file in ConfigParser format
+    and store it in various Class attributes.
     """
 
     if os.getenv('BLUESHOP_CFG'):
@@ -54,6 +59,9 @@ class Config:
     pricelists['mtime_pl3'] = None
 
     def _read_config(self, cfgpath):
+        """
+        Read config file if found in the specified path.
+        """
         filename = os.path.join(cfgpath, 'blueshop.cfg')
 
         if os.path.isfile(filename):
@@ -69,6 +77,9 @@ class Config:
             self.mail['bcc_limit'] = int(self.mail['bcc_limit'])
 
     def _read_mail_text(self, cfgpath):
+        """
+        Read the mail and promo text file if found in the config path.
+        """
         filename = os.path.join(cfgpath, 'mail_pricelist.txt')
 
         if os.path.isfile(filename):
@@ -84,6 +95,10 @@ class Config:
             f.close()
 
     def update_filenames(self):
+        """
+        Update the pricelists filename using full path to the
+        private directory.
+        """
         self.pricelists['file1'] = os.path.join(self.path['private'],
                 self.pricelists['filename1'])
         self.pricelists['file2'] = os.path.join(self.path['private'],
@@ -92,6 +107,10 @@ class Config:
                 self.pricelists['filename3'])
 
     def update_mtime(self):
+        """
+        Read the modification time of the pricelists file and
+        transform it to the local time.
+        """
         # file 1
         mtime = os.stat(self.pricelists['file1']).st_mtime
         self.pricelists['mtime_pl1'] = time.strftime('%Y-%m-%d %H:%M:%S',
@@ -106,12 +125,19 @@ class Config:
                 time.localtime(mtime))
 
     def update_config(self):
+        """
+        for each path in the configuration path read the config file
+        if found.
+        """
         for cfgpath in self._config_path:
             if os.path.isdir(cfgpath):
                 self._read_config(cfgpath)
                 self._read_mail_text(cfgpath)
 
     def __init__(self):
+        """
+        Create the ConfigParser obj and load the config file.
+        """
         self.config = ConfigParser.ConfigParser()
         self.update_config()
         self.update_filenames()

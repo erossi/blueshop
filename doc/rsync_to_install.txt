@@ -3,7 +3,7 @@ Run the command from the main blueshop directory.
 
 to Test what's going on:
 
-rsync -cnrlvz --delete --exclude-from doc/rsync_exclude_file.txt --whole-file ./ <remote_user@remote_server>:/usr/local/blueshop/
+rsync -cnrlvz --delete --delete-excluded --exclude-from doc/rsync_exclude_file.txt --whole-file ./ <remote_user@remote_server>:/usr/local/share/blueshop/
 
 to do It, simply remove the 'n' switch from the rsync command (-crlv).
 
