@@ -1,0 +1,20 @@
+** IMPORTANT **
+
+This software is not for general public release yet. It still has a lot of
+untranslated text and path which require proper setup.
+
+to test it:
+
+1) Create the 2 db with:
+   cd db
+   sqlite3 shop.sqlite3 < shop.sqlite3.dump
+   sqlite3 users.sqlite3 < users.sqlite3.dump
+
+2) Fix configuration paths in file cfg/blueshop.cfg.
+3) Fix configuration path in runme.sh
+4) run the runme.sh
+   ./runme.sh
+
+5) Open your browser URL: http://localhost:8080/
+6) Login with username: admin@mysite.org and password: admin1234
+
