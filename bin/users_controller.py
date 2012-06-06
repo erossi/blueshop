@@ -25,6 +25,9 @@ class User:
         self._db = db
         self._config = config
 
+        if 'cookie_secret' in self._config.users:
+            self._secret = self._config.users['cookie_secret']
+
     def __del__(self):
         pass
 

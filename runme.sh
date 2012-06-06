@@ -1,6 +1,7 @@
 #!/bin/sh
 
-INSTALL=/my_installation_path/blueshop
+# Change this to your fully installation path.
+INSTALL=$(pwd)
 export BLUESHOP_CFG=$INSTALL/cfg
 export BLUESHOP_DEBUG="true"
 
