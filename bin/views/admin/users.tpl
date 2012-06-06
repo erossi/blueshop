@@ -1,4 +1,3 @@
-%
 % rebase admin/admin_layout user=user, flash=flash
 % prev = allusers['prev']
 % next = allusers['next']
@@ -86,9 +85,8 @@
 % if len(allusers['list']):
       <table>
         <tr>
-          <th style="width: 8em; text-align: left;">P.IVA</th>
-          <th style="width: 10em; text-align: left;">Ragione Sociale</th>
-          <th style="width: 10em; text-align: left;">email</th>
+          <th style="width: 15em; text-align: left;">Ragione Sociale</th>
+          <th style="width: 18em; text-align: left;">email</th>
           <th> @OK </th>
           <th> @Lst </th>
           <th> @Prm </th>
@@ -98,15 +96,12 @@
 %
 % for thisuser in allusers['list']:
         <tr>
-          <th style="width: 8em; text-align: left;">
-            {{thisuser[1]}}
-          </th>
-          <th style="width: 10em; text-align: left;">
+          <th style="text-align: left;">
             <a href="/admin/changeuser?id={{thisuser[0]}}">
             {{thisuser[2]}}
             </a>
           </th>
-          <th style="width: 10em; text-align: left;">
+          <th style="text-align: left;">
             {{thisuser[3]}}
           </th>
 % if thisuser[4] == 'f':
