@@ -13,7 +13,7 @@ class FieldParser:
     _re_piva = None
 
     def __init__(self):
-        self._re_email = re.compile('^[A-Za-z0-9_.-]+@([A-Za-z0-9_]+\.)+[A-Za-z]{2,4}$')
+        self._re_email = re.compile('^[A-Za-z0-9_.%-]+@[A-Za-z0-9-.]+[A-Za-z]+$')
         self._re_pwd = re.compile('^[a-zA-Z0-9]{6,10}$')
         self._re_text50 = re.compile('.{,50}')
         self._re_piva = re.compile('^[A-Za-z0-9]{1,20}$')
