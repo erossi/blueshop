@@ -8,13 +8,13 @@
     </a>
   </div>
 
-  <div id="header1">
 % if ('user' in vars()) and (user):
+  <div id="header1">
     User: {{user['ragsoc']}} <br />
     email: {{user['email']}}
-% end
     <br />
   </div>
+% end
 
   <div class="clearer">&nbsp;</div>
 </div>
