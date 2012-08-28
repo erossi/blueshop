@@ -2,7 +2,7 @@
 
 # Change this to your fully installation path.
 INSTALL=$(pwd)
-export BLUESHOP_CFG=$INSTALL/cfg
+export BLUESHOP_CFG=$INSTALL/test
 export BLUESHOP_DEBUG="true"
 
 if [ -e $BLUESHOP_CFG/blueshop.cfg ]; then
