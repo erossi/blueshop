@@ -2,10 +2,10 @@
 
 <div id="sidebar">
   <div class="sidebox">
-    <div class="sideboxtitle"><span>Registrazione</span></div>
+    <div class="sideboxtitle"><span>help</span></div>
 
     <div class="sideboxcontent">
-      Per registrarsi come clienti Blue Tech s.r.l. inserite i
+      Per registrarsi inserite i
       Vostri dati anagrafici nei campi
       sottostanti.<br />
       <br />
@@ -118,9 +118,9 @@
       <br />
       <p>
        <strong>Attenzione:</strong>
-       Facendo clic sul pulsante "Conferma registrazione" si garantisce a Blue Tech s.r.l.
+       Facendo clic sul pulsante "Conferma registrazione" si garantisce
        la correttezza delle informazioni sopra indicate. La conferma vale anche come consenso implicito all'utilizzo dei dati personali
-       ai sensi dell'articolo 675/96.
+       ai sensi di legge.
        </p>
 
       <input type="submit" value="Invia la registrazione" />

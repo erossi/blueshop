@@ -1,74 +1,49 @@
-%include title login=True
+%rebase layout.tpl error=error, notice=None
 %
-<body>
-<div id="main">
+<div id="sidebar">
+  <div class="sidebox">
+    <div class="sideboxtitle"><span>Login</span></div>
 
-%if ('error' in vars()) and (error):
-<div id="error">
-  Error: {{error}}
-</div>
-%end
-
-<div id="registrazione">
-  <span style="font-size: 1.5em;">
-    <a href="/user/add">Registrati</a>
-  </span>
-  <p>
-    Se non avete ancora un Vostro Codice<br />
-    Utente personale potete richiederlo<br />
-    compilando un semplice modulo. La <br />
-    vostra richiesta verr&agrave; vagliata <br />
-    da un nostro responsabile che Vi<br />
-    risponder&agrave; prontamente.<br />
-  </p>
+    <div class="sideboxcontent">
+      <form action="/user/login" method="post">
+        email:
+        <input id="user_email" name="email" size="14" type="text" />
+        <br />
+        Password:
+        <input id="user_password" name="password" size="10" type="password" />
+        <br /><br />
+	<input name="commit" type="submit" value="Login" />
+       </form>
+    </div>
+  </div>
 </div>
 
-<div id="login">
-  <span style="font-size: 1.5em; color: blue;">
-    Login
-  </span>
-  <br /><br />
+<div id="content">
+  <div class="contentbox">
+    <div class="contentboxtitle">Info</div>
+    <div class="contentboxcontent">
 
-  <form action="/user/login" method="post">
-    email:
-    <input id="user_email" name="email" size="15" type="text" /><br />
-    Password:
-    <input id="user_password" name="password" size="15" type="password" /><br />
-    <br />
-    <input name="commit" type="submit" value="Entra" />
-  </form>
+In this area you should put the infos relative
+to your company or this web site in general.<br />
+<br />
+
+For example you can put a link to the
+<a href="/user/add">add_users page</a>,
+which can be usefull if you want to let users to
+register.<br />
+<br />
+
+Or a link to
+<a href="/main/recover_password">recover password page</a>.<br />
+<br />
+
+Another cool page is the
+<a href="/main/contacts">who we are page.</a><br />
+<br />
+
+Last, but no least (and not implemented yet!) is the about page,
+showing infos about this software and licences.<br />
+
+    </div>
+  </div>
 </div>
-
-<div id="recuperopassword">
-  <span style="font-size: 1.5em;">
-    <a href="/main/recover_password">Recupero password</a>
-  </span>
-  <p>
-    Se avete dimenticato la<br />
-    vostra username o la vostra<br />
-    password, oppure in fase di<br />
-    registrazione il server vi risponde<br />
-    che la Vs. ditta e' gia' stata registrata.<br />
-  </p>
-</div>
-
-<div id="chisiamo">
-  <span style="font-size: 1.5em;">
-    <a href="/main/contacts">Chi siamo</a>
-  </span>
-  <p>
-    La Ns. ditta ha sede in<br />
-    una moderna zona industriale di<br />
-    Bologna, facilmente raggiungibile<br />
-    dalle principali strade e autostrade,<br />
-    nonche' dall'Aereoporto Guglielmo <br />
-    Marconi.<br />
-  </p>
-</div>
-
-</div>
-
-%include footer_layout
-
-</body>
-</html>

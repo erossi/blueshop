@@ -16,9 +16,6 @@
       <b>DOVETE OBBLIGATORIAMENTE</b> contattarci telefonicamente
       o per mail al fine di aggiornare Vs. dati.<br />
       <br />
-      Per ulteriori informazioni chiamare lo
-      051/405050 oppure scrivere una email a:<br />
-      commerciale@bluetechinformatica.com<br />
     </div>
   </div>
 </div>
