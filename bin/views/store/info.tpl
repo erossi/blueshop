@@ -40,15 +40,14 @@
     <div class="contentboxtitle">Garanzia</div>
 
     <div class="contentboxcontent">
-   I prodotti Blue Tech s.r.l. sono coperti da due tipi di garanzia.
+   I prodotti sono coperti da due tipi di garanzia.
    <ul>
     <li> Garanzia diretta presso il Produttore.</li>
     <li> Garanzia presso il nostro Punto Vendita.</li>
    </ul>
    <p style="text-align: justify;">
    In entrambi i casi la garanzia si applica al singolo componente venduto,
-   anche nel caso in cui si tratti
-   di PC Assemblati Blue Tech.
+   anche nel caso in cui si tratti di PC Assemblati.
    </p>
    
    <strong>Garanzia presso il Produttore</strong>
@@ -73,7 +72,7 @@
    </p>
    <ul>
     <li>I difetti di fabbricazione dovuti a materiali difettosi.</li>
-    <li>L'assemblaggio difettoso dei PC Assemblati Blue Tech.</li>
+    <li>L'assemblaggio difettoso dei PC Assemblati.</li>
     <li>La manodopera necessaria al ripristino.</li>
    </ul>
    La garanzia <i>non copre</i>:
@@ -83,7 +82,7 @@
     <li>Danni provocati da errata installazione post-vendita di accessori.</li>
     <li>Gli interventi necessari per ripristinare malfunzionamenti software o danni provocati da programmi virus.</li>
    </ul>
-   Se, durante tale periodo, dovessero verificarsi malfunzionamenti Blue Tech s.r.l. ha la facolt&aacute; di:
+   Se, durante tale periodo, dovessero verificarsi malfunzionamenti la societ&aacute; ha la facolt&aacute; di:
    <ul>
     <li>Riparare il componente difettoso.</li>
     <li>Sostituire l'articolo con uno equivalente.</li>

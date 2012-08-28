@@ -179,9 +179,10 @@
       <br />
       <p>
        <strong>Attenzione:</strong>
-       Facendo clic sul pulsante "Conferma registrazione" si garantisce a Blue Tech s.r.l.
-       la correttezza delle informazioni sopra indicate. La conferma vale anche come consenso implicito all'utilizzo dei dati personali
-       ai sensi dell'articolo 675/96.
+       Facendo clic sul pulsante "Conferma registrazione" si garantisce
+       la correttezza delle informazioni sopra indicate.
+       La conferma vale anche come consenso implicito all'utilizzo dei dati personali
+       ai sensi di legge.
        </p>
 
       <input type="submit" value="Modifica la registrazione" />

@@ -11,4 +11,3 @@ a questo indirizzo email.
 Per qualsiasi problema potete contattarci via telefono o email.
 Buona giornata
 
-Blue Tech s.r.l.

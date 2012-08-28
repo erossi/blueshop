@@ -57,5 +57,3 @@ In caso di pagamento anticipato dovete attendere, come di consueto, la proforma 
 
 Per qualsiasi problema potete contattarci via telefono o email.
 Buona giornata
-
-Blue Tech s.r.l.
