@@ -95,6 +95,12 @@ class UserDb:
                 email=? or piva=?", (email, piva))
         return (self._cur.fetchone())
 
+    def _get_last_logins(self, uid):
+        self._cur.execute("select created_at from logins where user_id=? \
+                order by created_at DESC LIMIT 3", (uid,))
+        result = self._cur.fetchall()
+        return(result)
+
     def get_all_infos(self, uid):
         self._cur.execute("select * from users where id = ?", (uid,))
         rawuser = self._cur.fetchone()
@@ -103,6 +109,8 @@ class UserDb:
         if rawuser:
             for idx, col in enumerate(self._cur.description):
                 myuser[col[0]] = rawuser[idx]
+
+            myuser['logins'] = self._get_last_logins(uid)
 
         return (myuser)
 

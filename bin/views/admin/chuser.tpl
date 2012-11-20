@@ -111,6 +111,10 @@
         <span>Registrato dal: {{tpldata['created_at']}}</span>
         &nbsp;
         <span>Utima modifica il: {{tpldata['updated_at']}}</span>
+        <br />
+% for i in range(len(tpldata['logins'])):
+        <span>Login[{{i}}]: {{tpldata['logins'][i][0]}}</span><br />
+% end
       </p>
 
     </div>
