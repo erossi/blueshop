@@ -1,20 +1,37 @@
-** IMPORTANT **
+In order to install the software please run:
 
-This software is not for general public release yet. It still has a lot of
-untranslated text and path which require proper setup.
+python setup.py install
+
+The software will be installed like:
+
+Modules:
+/usr/local/lib/python2.7/dist-packages/blueshop
+
+Data files:
+/usr/local/share/blueshop/
+
+Config:
+/usr/local/etc/blueshop/
+
+Executable:
+/usr/local/bin/blueshop
+
+Db, Overlay:
+/var/local/blueshop/
 
 to test it:
 
 1) Create the 2 db with:
-   cd db
+   cd <db directory>
    sqlite3 shop.sqlite3 < shop.sqlite3.dump
    sqlite3 users.sqlite3 < users.sqlite3.dump
 
 2) Fix configuration paths in file cfg/blueshop.cfg.
-3) Fix configuration path in runme.sh
-4) run the runme.sh
-   ./runme.sh
 
 5) Open your browser URL: http://localhost:8080/
 6) Login with username: admin@mysite.org and password: admin1234
+
+Note:
+This software is not for general public release yet. It still has a lot of
+untranslated text and path which require proper setup.
 

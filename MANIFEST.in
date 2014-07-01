@@ -1,3 +1,2 @@
-recursive-include images *.png
-recursive-include static *
-recursive-include views *.tpl
+recursive-include doc *
+prune doc/html

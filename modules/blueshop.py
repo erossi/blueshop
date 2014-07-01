@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # coding: utf-8
 
 # Copyright (C) 2012 Enrico Rossi
@@ -24,21 +24,24 @@ __author__ = "Enrico Rossi <e.rossi@tecnobrain.com>"
 __date__ = "20 Feb 2012"
 __credits__ = """ Blue Tech Informatica s.r.l. """
 
-import version
-__version__ = version._version_
-
 import os
+import sys
 from bottle import Bottle, TEMPLATE_PATH
 from bottle import route, run, template, get, post, request, response
 from bottle import redirect, static_file, debug
-import shop_model
-import user_model
-import users_controller
-import shop_controller
-import admin_controller
-import parser_controller
-import mail_controller
-import config
+
+# Please patch this to fit your installation.
+# It is required that all the modules are found by the application.
+import blueshop
+module_path = os.path.dirname(blueshop.__file__)
+sys.path.insert(0, module_path)
+
+from blueshop import config, version
+from blueshop import admin_controller, parser_controller, mail_controller
+from blueshop import users_controller, shop_controller
+from blueshop import shop_model, user_model
+
+__version__ = version._version_
 
 # object definition
 config = config.Config()
@@ -55,7 +58,10 @@ if os.getenv('BLUESHOP_DEBUG'):
     debug(True)
 
 # Define template path
-TEMPLATE_PATH.insert(0, os.path.join(config.path['overlay'], 'views'))
+template_path = os.path.join(config.path['base'], 'views')
+overlay_path = os.path.join(config.path['overlay'], 'views')
+TEMPLATE_PATH.insert(0, template_path)
+TEMPLATE_PATH.insert(0, overlay_path)
 
 #
 # Local functions
@@ -80,6 +86,20 @@ def _admin_auth():
         return (cookie)
     else:
         return (None)
+
+# Decorators
+def auth(fn):
+    def wrapper():
+        cookie = _auth()
+
+        if cookie:
+            tplpage = fn(cookie)
+        else:
+            tplpage = redirect('/')
+
+        return (tplpage)
+
+    return wrapper
 
 #
 # Create the bottle object
@@ -492,19 +512,13 @@ def user_add_post():
     return template('user/add', tpldata=newuser)
 
 @app.route('/user/modify', method='get')
-def user_modify():
-    cookie = _auth()
-
-    if cookie:
-        uid = user.uid(cookie)
-        user_info = user.get_all_infos(uid)
-        # add error and notice
-        user_info['flash'] = None
-        tplpage = template('user/modify', tpldata=user_info)
-    else:
-        tplpage = redirect('/')
-
-    return (tplpage)
+@auth
+def user_modify(cookie):
+    uid = user.uid(cookie)
+    user_info = user.get_all_infos(uid)
+    # add error and notice
+    user_info['flash'] = None
+    return (template('user/modify', tpldata=user_info))
 
 @app.route('/user/modify', method='post')
 def user_modify():

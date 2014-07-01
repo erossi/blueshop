@@ -23,16 +23,13 @@
       <li> Direttamente presso il nostro 
         <a href="/shop/contacts">Punto Vendita</a>
       </li>
-      <li> Mediante l'invio di un ordine via email oppure via fax allo 051-6417198/9.</li>
+      <li> Mediante l'invio di un ordine via email oppure via fax.</li>
     </ul>
     Saranno accettate le seguenti formule di pagamento:
     <ul>
     <li> Pagamento in contrassegno.</li>
     <li> Bonifico bancario anticipato.</li>
     </ul>
-
-     <img alt="Disco" src="/images/disco.png" />
-     <a href="/static/fideius.doc">Modulo per la fideiussione</a>
     </div>
   </div>
 
