@@ -1,0 +1,52 @@
+# Apache 2 virtual host demo file.
+
+<VirtualHost *:80>
+	ServerAdmin webmaster@localhost
+	# Put your server name here
+	ServerName blueshop.local
+
+	WSGIDaemonProcess blueshop user=www-data group=www-data processes=2 threads=15 python-path=/opt/blueshop
+
+	# Aliases for jQuery, jQuery-ui and TinyMCE
+	# Fix with your installation path.
+	Alias /static/javascripts/jquery.js /usr/share/javascript/jquery/jquery.js
+	Alias /static/javascripts/jquery-ui.js /usr/share/javascript/jquery-ui/jquery-ui.min.js
+	Alias /static/stylesheets/jquery-ui /usr/share/javascript/jquery-ui/css/smoothness/
+	Alias /static/javascripts/tinymce /usr/share/tinymce/www
+
+	Alias /favicon.ico /opt/blueshop/images/favicon.ico
+	Alias /static /opt/blueshop/static
+	Alias /images /opt/blueshop/images
+	WSGIScriptAlias / /opt/blueshop/modules/__main__.py
+
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+
+	<Directory /opt/blueshop/static>
+		Order deny,allow
+		Allow from all
+	</Directory>
+
+	<Directory /opt/blueshop/images>
+		Order deny,allow
+		Allow from all
+	</Directory>
+
+	<Directory /opt/blueshop/modules>
+		# Options +FollowSymLinks
+		WSGIProcessGroup blueshop
+		WSGIApplicationGroup %{GLOBAL}
+		Order deny,allow
+		Allow from all
+	</Directory>
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+
+	# Possible values include: debug, info, notice, warn, error, crit,
+	# alert, emerg.
+	LogLevel info
+
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
