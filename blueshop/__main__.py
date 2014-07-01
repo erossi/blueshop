@@ -34,17 +34,16 @@ if os.getenv('BLUESHOP_PATH'):
 else:
     modules_path = '/opt/blueshop'
 
-sys.path.insert(0, module_path)
+sys.path.insert(0, modules_path)
 
-from blueshop import _version_, _lastupdate_
-from blueshop import _tagged_version_, _git_version_
-from blueshop import config
-from blueshop import admin_controller
-from blueshop import parser_controller
-from blueshop import mail_controller
-from blueshop import users_controller
-from blueshop import shop_controller
-from blueshop import shop_model, user_model
+from modules import _version_, _lastupdate_
+from modules import _tagged_version_, _git_version_
+from modules import config
+from modules import admin_controller
+from modules import parser_controller
+from modules import user_controller
+from modules import shop_controller
+from modules import shop_model
 
 __version__ = _version_
 __last_update__ = _lastupdate_
@@ -52,10 +51,8 @@ __last_update__ = _lastupdate_
 # object definition
 config = config.Config()
 shopdb = shop_model.ShopDb(config)
-userdb = user_model.UserDb(config)
-mail = mail_controller.MailUtils(config)
-user = users_controller.User(userdb, mail, config)
-shop = shop_controller.Shop(shopdb, mail, config)
+user = user_controller.User(config)
+shop = shop_controller.Shop(shopdb, config)
 admin = admin_controller.Admin(shopdb, config)
 fieldparser = parser_controller.FieldParser()
 
@@ -104,10 +101,9 @@ def auth(fn):
         if cookie:
             tplpage = fn(cookie)
         else:
-            tplpage = redirect('/')
+            tplpage = bottle.redirect('/')
 
         return (tplpage)
-
     return wrapper
 
 # Create the bottle object
@@ -119,35 +115,41 @@ application = bottle.Bottle()
 #
 
 @application.route('/')
-def index():
+def callback():
     cookie = _auth()
 
     if cookie:
         if user.is_admin(cookie):
-            tplpage = redirect('/admin/index')
+            tplpage = bottle.redirect('/admin/index')
         else:
-            tplpage = redirect('/shop/index')
+            tplpage = bottle.redirect('/shop/index')
     else:
-        tplpage = template('user/login', error=None)
+        tplpage = bottle.template('user/login', error=None)
 
     return (tplpage)
 
 @application.route('/main/contacts')
-def main_contacts():
-    return template('main/contacts')
+def callback():
+    """
+    """
+    return (bottle.template('main/contacts'))
 
 @application.route('/main/about')
-def main_about():
-    return template('main/about')
+def callback():
+    """
+    """
+    return(bottle.template('main/about'))
 
 @application.route('/main/recover_password', method='get')
-def recover_password():
-    return template('main/recover_password', flash=None)
+def callback():
+    return(bottle.template('main/recover_password', flash=None))
 
 @application.route('/main/recover_password', method='post')
-def recover_password_submit():
-    email = request.forms.get('email')
-    piva = request.forms.get('piva')
+def callback():
+    """
+    """
+    email = bottle.request.forms.get('email')
+    piva = bottle.request.forms.get('piva')
     # check email address and piva agains sql injection
     print "FIXME: parse against sql injection"
 
@@ -157,82 +159,92 @@ def recover_password_submit():
         flash = {'error':"Non esiste un record corrispondente",
                 'notice':None}
 
-    return template('main/recover_password', flash=flash)
+    return(bottle.template('main/recover_password', flash=flash))
 
 #
 # Admin route
 #
 
 @application.route('/admin/index', method='get')
-def adm_index():
+def callback():
+    """
+    """
     cookie = _admin_auth()
 
     if cookie:
         myuser = cookie[0]
         pdata = {'user':myuser, 'cat':shopdb.categories, 'flash':None}
-        tplpage = template('admin/index', tpldata=pdata)
+        tplpage = bottle.template('admin/index', tpldata=pdata)
     else:
-        tplpage = redirect('/')
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/admin/index', method='post')
-def adm_index_post():
+def callback():
+    """
+    """
     cookie = _admin_auth()
 
     if cookie:
-        if request.forms.get('commit') == 'X':
-            tplpage = admin.remove_category(cookie, request.forms)
+        if bottle.request.forms.get('commit') == 'X':
+            tplpage = admin.remove_category(cookie, bottle.request.forms)
 
-        elif request.forms.get('commit') == 'Modifica':
-            tplpage = admin.modify_category(cookie, request.forms)
+        elif bottle.request.forms.get('commit') == 'Modifica':
+            tplpage = admin.modify_category(cookie, bottle.request.forms)
 
-        elif request.forms.get('commit') == 'Aggiungi':
-            tplpage = admin.add_category(cookie, request.forms)
+        elif bottle.request.forms.get('commit') == 'Aggiungi':
+            tplpage = admin.add_category(cookie, bottle.request.forms)
 
         else:
             tplpage = "Shouldn't appened!"
     else:
-        tplpage = redirect('/')
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/admin/items', method='get')
-def adm_items():
+def callback():
+    """
+    """
     cookie = _admin_auth()
 
     if cookie:
         tplpage = admin.items(cookie)
     else:
-        tplpage = redirect('/')
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/admin/items', method='post')
-def adm_items_post():
+def callback():
+    """
+    """
     cookie = _admin_auth()
 
     if cookie:
-        if request.forms.get('whichform') == 'rmitem':
-            tplpage = admin.item_remove(cookie, request.forms)
+        if bottle.request.forms.get('whichform') == 'rmitem':
+            tplpage = admin.item_remove(cookie, bottle.request.forms)
 
-        elif request.forms.get('whichform') == 'chcat':
-            cookie[1] = int(request.forms.get('codcat'))
+        elif bottle.request.forms.get('whichform') == 'chcat':
+            cookie[1] = int(bottle.request.forms.get('codcat'))
             print "FIXME: default category not stored in the cookie"
             tplpage = admin.items(cookie)
         else:
             tplpage = "This Shouldn't appened!"
     else:
-        tplpage = redirect('/')
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/admin/upload_csv_pricelist', method='post')
-def adm_upload_csv_pricelist():
+def callback():
+    """
+    """
     cookie = _admin_auth()
 
     if cookie:
-        myfile = request.files.filedata
+        myfile = bottle.request.files.filedata
 
         if myfile.filename == "listino.csv":
             # nuke the carts
@@ -245,14 +257,13 @@ def adm_upload_csv_pricelist():
             tplpage = "Shit wrong filename."
 
     else:
-        tplpage = redirect('/')
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/admin/upload_csv_promo', method='post')
-def adm_upload_csv_promo():
-    """
-    Upload the promo csv file.
+def callback():
+    """ Upload the promo csv file.
 
     bug: void all carts is a bug, should remove only the existing
     promo's item eventually present in the carts.
@@ -260,7 +271,7 @@ def adm_upload_csv_promo():
     cookie = _admin_auth()
 
     if cookie:
-        myfile = request.files.filedata
+        myfile = bottle.request.files.filedata
 
         if myfile.filename == "promo.csv":
             # nuke the carts
@@ -273,16 +284,18 @@ def adm_upload_csv_promo():
             tplpage = "Shit wrong filename."
 
     else:
-        tplpage = redirect('/')
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/admin/upload_pricelist', method='post')
-def adm_upl_pricelists():
+def callback():
+    """
+    """
     cookie = _admin_auth()
 
     if cookie:
-        myfile = request.files.filedata
+        myfile = bottle.request.files.filedata
 
         if myfile.filename == config.pricelists['filename1']:
             filename = config.pricelists['file1']
@@ -303,76 +316,84 @@ def adm_upl_pricelists():
         tplpage = admin.pricelists(cookie, flash)
 
     else:
-        tplpage = redirect('/')
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/admin/users', method='get')
-def adm_users():
+def callback():
+    """
+    """
     cookie = _admin_auth()
 
     if cookie:
         tplpage = user.list(cookie)
     else:
-        tplpage = redirect('/')
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/admin/users', method='post')
-def adm_users():
+def callback():
+    """
+    """
     cookie = _admin_auth()
 
     if cookie:
-        search = request.forms.get('search')
+        search = bottle.request.forms.get('search')
 
         if search == "None":
             search = None
 
-        if "next" in request.forms.get('commit'):
-            cursor = int(request.forms.get('cursornext'))
-        elif "prev" in request.forms.get('commit'):
-            cursor = int(request.forms.get('cursorprev'))
-        elif "Cerca" in request.forms.get('commit'):
+        if "next" in bottle.request.forms.get('commit'):
+            cursor = int(bottle.request.forms.get('cursornext'))
+        elif "prev" in bottle.request.forms.get('commit'):
+            cursor = int(bottle.request.forms.get('cursorprev'))
+        elif "Cerca" in bottle.request.forms.get('commit'):
             cursor = 0
         else:
             search = None
 
         tplpage = user.list(cookie, cursor, search)
     else:
-        tplpage = redirect('/')
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/admin/changeuser', method='get')
-def adm_chuser():
+def callback():
+    """
+    """
     cookie = _admin_auth()
 
     if cookie:
-        uid = request.query.id
+        uid = bottle.request.query.id
         user_info = user.get_all_infos(uid)
-        tplpage = template('admin/chuser', tpldata=user_info,
+        tplpage = bottle.template('admin/chuser', tpldata=user_info,
             user=cookie[0], flash=None)
     else:
-        tplpage = redirect('/')
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/admin/changeuser', method='post')
-def adm_chuser():
+def callback():
+    """
+    """
     cookie = _admin_auth()
 
     if cookie:
         flash = {}
-        uid = request.forms.get('uid')
+        uid = bottle.request.forms.get('uid')
         user_info = user.get_all_infos(uid)
 
         # patch against missini password confirmation
-        request.forms.append('password_confirmation',
-                request.forms.get('password'))
+        bottle.request.forms.append('password_confirmation',
+                bottle.request.forms.get('password'))
 
         # check for the consistency of all field
         # return only those field to be updated
-        newuser = fieldparser.user_modify(user_info, request.forms)
+        newuser = fieldparser.user_modify(user_info, bottle.request.forms)
 
         # and if there isn't any error
         if newuser['error'] is None:
@@ -391,123 +412,149 @@ def adm_chuser():
             flash['error'] = newuser['error']
             flash['notice'] = None
 
-        tplpage = template('admin/chuser', tpldata=user_info,
+        tplpage = bottle.template('admin/chuser', tpldata=user_info,
             user=cookie[0], flash=flash)
     else:
-        tplpage = redirect('/')
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/admin/rmuser', method='get')
-def adm_chuser():
+def callback():
+    """
+    """
     cookie = _admin_auth()
 
     if cookie:
-        uid = request.query.id
+        uid = bottle.request.query.id
         tplpage = user.delete(cookie, uid)
     else:
-        tplpage = redirect('/')
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/admin/pricelists', method='get')
-def adm_pricelists():
+def callback():
+    """
+    """
     cookie = _admin_auth()
 
     if cookie:
         tplpage = admin.pricelists(cookie)
     else:
-        tplpage = redirect('/')
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/admin/pricelists', method='post')
-def adm_mail_pricelists():
+def callback():
+    """
+    """
     cookie = _admin_auth()
 
     if cookie:
-        subject = request.forms.get('subject')
-        msg = request.forms.get('message')
+        subject = bottle.request.forms.get('subject')
+        msg = bottle.request.forms.get('message')
         user.mail_pricelists(cookie, subject, msg)
         flash = {'error':None, 'notice':'Spediti listini via email'}
         tplpage = admin.pricelists(cookie, flash)
     else:
-        tplpage = redirect('/')
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/admin/download_pricelist', method='get')
-def adm_down_pl():
+def callback():
+    """
+    """
     cookie = _admin_auth()
 
     if cookie:
-        pricelist = int(request.query.pl)
+        pricelist = int(bottle.request.query.pl)
         filename = shop.download_pricelist(pricelist)
 
         if filename:
-            return static_file(filename, root=config.path['private'], 
-                    download=filename,
-                    mimetype=config.pricelists['mimetype'])
+            return(bottle.static_file(filename, \
+                    root=config.path['private'], \
+                    download=filename, \
+                    mimetype=config.pricelists['mimetype']))
 
 @application.route('/admin/promo', method='get')
-def adm_promo():
+def callback():
+    """
+
+    bug: bottle.redirect() is an exceptions
+    """
     cookie = _admin_auth()
 
     if cookie:
         tplpage = admin.promo(cookie)
     else:
-        tplpage = redirect('/')
+        # BUG, this is an exception
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/admin/promo', method='post')
-def adm_mail_promo():
+def callback():
+    """
+    """
     cookie = _admin_auth()
 
     if cookie:
-        subject = request.forms.get('subject')
-        msg = request.forms.get('message')
+        subject = bottle.request.forms.get('subject')
+        msg = bottle.request.forms.get('message')
         user.mail_promo(cookie, subject, msg)
         flash = {'error':None, 'notice':'Spedite promo via email'}
         tplpage = admin.promo(cookie, flash)
     else:
-        tplpage = redirect('/')
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 #
 # User route
 #
 
 @application.route('/user/login', method='get')
-def login_form():
-    return template('user/login', error=None)
+def callback():
+    """
+    """
+    return(bottle.template('user/login', error=None))
 
 @application.route('/user/login', method='post')
-def login_submit():
-    email = request.forms.get('email')
-    password = request.forms.get('password')
+def callback():
+    """
+
+    bug: exception.
+    """
+    email = bottle.request.forms.get('email')
+    password = bottle.request.forms.get('password')
     # parse the input field
     email = fieldparser.email(email)
     password = fieldparser.password(password)
 
     if user.check_login(email, password):
         print "FIXME: login void the chart?"
-        return redirect('/shop/index')
+        # FIXME exception!
+        return(bottle.redirect('/shop/index'))
     else:
-        return template('user/login', error="Login failed!")
+        return(bottle.template('user/login', error="Login failed!"))
 
 @application.route('/user/add', method='get')
-def user_add_get():
+def callback():
+    """
+    """
     tpldata = fieldparser.user_add(None)
-    return template('user/add', tpldata=tpldata)
+    return(bottle.template('user/add', tpldata=tpldata))
 
 @application.route('/user/add', method='post')
-def user_add_post():
-    """ Add a new user """
+def callback():
+    """ Add a new user
+    """
 
     # check for the consistency of all field
-    newuser = fieldparser.user_add(request.forms)
+    newuser = fieldparser.user_add(bottle.request.forms)
 
     if newuser['error'] is None:
         newuser = user.add(newuser)
@@ -516,19 +563,23 @@ def user_add_post():
             newuser = fieldparser.user_add(None)
             newuser['notice'] = 'Registrazione inviata correttamente.'
 
-    return template('user/add', tpldata=newuser)
+    return(bottle.template('user/add', tpldata=newuser))
 
 @application.route('/user/modify', method='get')
 @auth
-def user_modify(cookie):
+def callback(cookie):
+    """
+    """
     uid = user.uid(cookie)
     user_info = user.get_all_infos(uid)
     # add error and notice
     user_info['flash'] = None
-    return (template('user/modify', tpldata=user_info))
+    return(bottle.template('user/modify', tpldata=user_info))
 
 @application.route('/user/modify', method='post')
-def user_modify():
+def callback():
+    """
+    """
     cookie = _auth()
 
     if cookie:
@@ -537,7 +588,7 @@ def user_modify():
         user_info = user.get_all_infos(uid)
         # check for the consistency of all field
         # return only those field to be updated
-        newuser = fieldparser.user_modify(user_info, request.forms)
+        newuser = fieldparser.user_modify(user_info, bottle.request.forms)
 
         # and if there isn't any error
         if newuser['error'] is None:
@@ -554,14 +605,17 @@ def user_modify():
             flash['error'] = newuser['error']
 
         user_info['flash'] = flash
-        tplpage = template('user/modify', tpldata=user_info)
+        tplpage = bottle.template('user/modify', tpldata=user_info)
     else:
-        tplpage = redirect('/')
+        # FIXME exception
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/user/rmuser', method='get')
-def user_del():
+def callback():
+    """
+    """
     cookie = _auth()
 
     if cookie:
@@ -569,10 +623,13 @@ def user_del():
 
     # Remove the cookie
     user.logout()
-    return redirect('/')
+    # FIXME exception
+    return(bottle.redirect('/'))
 
 @application.route('/user/logout')
-def logout():
+def callback():
+    """
+    """
     cookie = _auth()
 
     if cookie:
@@ -580,67 +637,80 @@ def logout():
 
     # Remove the cookie
     user.logout()
-    return redirect('/')
+    # FIXME exception
+    return(bottle.redirect('/'))
 
 #
 # Shop route
 #
 
 @application.route('/shop/index', method='get')
-def shop_index():
+def callback():
+    """
+    """
     cookie = _auth()
 
     if cookie:
         tplpage = shop.index(cookie)
     else:
-        tplpage = redirect('/')
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/shop/index', method='post')
-def shop_index_submit():
+def callback():
+    """
+    """
     cookie = _auth()
 
     if cookie:
-        cookie[1] = int(request.forms.get('codcat'))
+        cookie[1] = int(bottle.request.forms.get('codcat'))
         print "FIXME: default category not stored in the cookie"
         tplpage = shop.index(cookie)
     else:
-        tplpage = redirect('/')
+        # FIXME exception
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/shop/buy')
-def shop_buy_article():
+def callback():
+    """
+    """
     # check if it is an ajax request
-    if request.is_ajax:
+    if bottle.request.is_ajax:
         cookie = _auth()
 
         if cookie:
             # item id and quantity are a GET request.
-            item_id = int(request.query.aid)
-            item_qta = int(request.query.qta)
+            item_id = int(bottle.request.query.aid)
+            item_qta = int(bottle.request.query.qta)
             uid = user.uid(cookie)
             shop.buy_item(uid, item_id, item_qta)
             return('OK')
         else:
-            return('shit') # redirect to somewhere
+            return('Oops!') # redirect to somewhere
 
 @application.route('/shop/show')
-def show_item():
+def callback():
+    """
+    """
     cookie = _auth()
 
     if cookie:
         # is a GET request
-        item_id = int(request.query.aid)
+        item_id = int(bottle.request.query.aid)
         tplpage = shop.show_item(cookie, item_id)
     else:
-        tplpage = redirect('/')
+        # FIXME exception
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/shop/cart', method='get')
-def shop_cart():
+def callback():
+    """
+    """
     cookie = _auth()
 
     if cookie:
@@ -649,157 +719,185 @@ def shop_cart():
         userinfo = user.get_all_infos(uid)
         tplpage = shop.shoppingcart(userinfo)
     else:
-        tplpage = redirect('/')
+        # FIXME exception
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/shop/cart', method='post')
-def shop_cart():
+def callback():
+    """
+    """
     cookie = _auth()
 
     if cookie:
-        item_id = int(request.forms.get('aid'))
+        item_id = int(bottle.request.forms.get('aid'))
         uid = user.uid(cookie)
         shop.buy_item(uid, item_id, 0)
         # get all infos about this uid from the dbase
         userinfo = user.get_all_infos(uid)
         tplpage = shop.shoppingcart(userinfo)
     else:
-        tplpage = redirect('/')
+        # FIXME exception
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/shop/checkout', method='post')
-def shop_checkout():
+def callback():
+    """
+    """
     cookie = _auth()
 
     if cookie:
         uid = user.uid(cookie)
         user_info = user.get_all_infos(uid)
         # add the order information into the user dict.
-        user_info['orderinfo'] = request.forms.get('info')
-        tplpage = shop.checkout(user_info)
-    else:
-        tplpage = redirect('/')
+        user_info['orderinfo'] = bottle.request.forms.get('info')
+        chart = shop.checkout(user_info)
 
-    return (tplpage)
+        if user.checkout(chart):
+            shop.chart_del(user_info['id'])
+            flash['notice'] = 'Ordine completato con successo.'
+        else:
+            flash['error'] = 'Ci sono stati errori di sperizione'
+
+        tplpage = template('store/shoppingcart', tpldata=chart)
+    else:
+        # FIXME exception
+        tplpage = bottle.redirect('/')
+
+    return(tplpage)
 
 @application.route('/shop/download_pricelist')
-def shop_download_pl():
+def callback():
+    """
+    """
     cookie = _auth()
 
     if cookie:
         filename = shop.download_pricelist(user.pricelist(cookie))
 
         if filename:
-            return static_file(filename, root=config.path['private'], 
-                    download=config.pricelists['filename'],
-                    mimetype=config.pricelists['mimetype'])
+            return(bottle.static_file(filename, \
+                    root=config.path['private'], \
+                    download=config.pricelists['filename'], \
+                    mimetype=config.pricelists['mimetype']))
 
 @application.route('/shop/support')
-def shop_support():
+def callback():
+    """
+    """
     cookie = _auth()
 
     if cookie:
-        tplpage = template('store/support', tpldata=cookie[0])
+        tplpage = bottle.template('store/support', tpldata=cookie[0])
     else:
-        tplpage = redirect('/')
+        # FIXME exception
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/shop/info')
-def shop_info():
+def callback():
+    """
+    """
     cookie = _auth()
 
     if cookie:
-        tplpage = template('store/info', tpldata=cookie[0])
+        tplpage = bottle.template('store/info', tpldata=cookie[0])
     else:
-        tplpage = redirect('/')
+        # FIXME exception
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 @application.route('/shop/contacts')
-def shop_contacts():
+def callback():
+    """
+    """
     cookie = _auth()
 
     if cookie:
-        tplpage = template('store/contacts', tpldata=cookie[0])
+        tplpage = bottle.template('store/contacts', tpldata=cookie[0])
     else:
-        tplpage = redirect('/')
+        # FIXME exception
+        tplpage = bottle.redirect('/')
 
-    return (tplpage)
+    return(tplpage)
 
 # Images route
 @application.route('/images/<filename:re:.*\.png>')
-def send_image(filename):
+def callback(filename):
+    """
+    """
     basepath = os.path.join(config.path['base'], 'images')
     mypath = os.path.join(config.path['overlay'], 'images')
 
     if os.path.isfile(os.path.join(mypath, filename)):
-        return static_file(filename, root=mypath, mimetype='image/png')
+        return(bottle.static_file(filename, \
+                root=mypath, mimetype='image/png'))
     else:
-        return static_file(filename, root=basepath, mimetype='image/png')
+        return(bottle.static_file(filename, \
+                root=basepath, mimetype='image/png'))
 
 
 # Static pages and files to be served.
 @application.route('/static/<filename:path>')
-def send_static(filename):
+def callback(filename):
+    """
+    """
     basepath = os.path.join(config.path['base'], 'static')
     mypath = os.path.join(config.path['overlay'], 'static')
 
     if os.path.isfile(os.path.join(mypath, filename)):
-        return static_file(filename, root=mypath)
+        return(bottle.static_file(filename, root=mypath))
     else:
-        return static_file(filename, root=basepath)
+        return(bottle.static_file(filename, root=basepath))
 
 #
 # Errors
 #
-@application.error(401)
-def callback(error):
-    """ UnAuthorized
-    """
-    before_request()
-
-    if user.auth():
-        tplobj.login=True
-
-    # set the BC
-    tplobj.set_breadcrumbs(title = tplobj.gettext('Error 401'))
-
-    if _debug:
-        print 'Main ERROR 401'
-
-    return(bottle.template('e401', tplobj=tplobj))
-
-@application.error(404)
-def callback(error):
-    """ File Not Found
-    """
-    before_request()
-
-    if user.auth():
-        tplobj.login=True
-
-    # set the BC
-    tplobj.set_breadcrumbs(title = tplobj.gettext('Error 404'))
-
-    if _debug:
-        print 'Main ERROR 404'
-
-    return(bottle.template('e404', tplobj=tplobj))
+#@application.error(401)
+#def callback(error):
+#    """ UnAuthorized
+#    """
+#    # before_request()
+#
+#    if user.auth():
+#        tplobj.login=True
+#
+#    # set the BC
+#    tplobj.set_breadcrumbs(title = tplobj.gettext('Error 401'))
+#
+#    if _debug:
+#        print 'Main ERROR 401'
+#
+#    return(bottle.template('e401', tplobj=tplobj))
+#
+#@application.error(404)
+#def callback(error):
+#    """ File Not Found
+#    """
+#    # before_request()
+#
+#    if user.auth():
+#        tplobj.login=True
+#
+#    # set the BC
+#    tplobj.set_breadcrumbs(title = tplobj.gettext('Error 404'))
+#
+#    if _debug:
+#        print 'Main ERROR 404'
+#
+#    return(bottle.template('e404', tplobj=tplobj))
 
 
 #
 # Main, internal webserver used for test only.
 #
 if __name__ == "__main__":
-    bottle.run(application, host=config.site['glossary_host'], \
-            port=config.site['glossary_port'])
-
-
-if __name__ == "__main__":
-    #run(host='localhost', port=8080, reloader=True)
-    run(app, host='localhost', port=8080)
+    bottle.run(application, host=config.site['host'], \
+            port=config.site['port'])
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

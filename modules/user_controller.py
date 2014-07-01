@@ -1,29 +1,49 @@
 #!/usr/bin/env python
+# coding: utf-8
+
+# Copyright (C) 2012, 2014 Enrico Rossi
+# This file is part of Blueshop.
+#
+# Blueshop is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Blueshop is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Blueshop. If not, see <http://www.gnu.org/licenses/>.
 
 import time
 from bottle import request, response, template
+import user_model
+from modules import mail_controller
 
 # the cookie is in the form of:
 # [{'id': int, 'ragsoc': u'text', 'email': u'@text', 'listino': int,
 #   'admin': 't | f'}, int]
 
 class User:
-    """
-    The users controller.
+    """ The users controller.
     """
 
     _secret = 'changeme'
-    _mail = None
-    _config = None
 
-    # The db object
+    # The local objects
     _db = None
+    _config = None
+    _mail = None
 
 
-    def __init__(self, db, mail, config):
-        self._mail = mail
-        self._db = db
+    def __init__(self, config):
+        """
+        """
         self._config = config
+        self._db = user_model.UserDb(config)
+        self._mail = mail_controller.MailUtils(config)
 
         if 'cookie_secret' in self._config.users:
             self._secret = self._config.users['cookie_secret']
@@ -188,12 +208,11 @@ class User:
         else:
             self._db.list(cursor)
 
-        return template('admin/users', user=myuser, allusers=self._db.users,
-                cursor=cursor, search=search, flash=flash)
+        return(template('admin/users', user=myuser, allusers=self._db.users,
+                cursor=cursor, search=search, flash=flash))
 
     def delete(self, cookie, uid=None):
-        """
-        Remove a user from the database.
+        """ Remove a user from the database.
 
         When uid is None then a normal user try to remove himself
         from the modify user menu.
@@ -242,6 +261,11 @@ class User:
 
         if users_to_send:
             self._mail.promo(users_to_send, subject, msg)
+
+    def checkout(self, chart):
+        """
+        """
+        return(self._mail.shop_checkout(chart))
 
 if __name__ == "__main__":
     print "Cannot execute as program!"

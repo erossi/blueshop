@@ -1,12 +1,11 @@
-%import version
-%version = version._version_
+% _version_ = 'FIXME'
 %
 <div id="footer">
   <span style="margin-left: 1em;">
     &copy; Please change this with your company infos and email
     &nbsp;<a href="mailto:info@mycompany.fake">info@mycompany.fake</a>
   </span>
-  <span style="margin-left: 1em;">({{version}})</span>
+  <span style="margin-left: 1em;">({{_version_}})</span>
 </div>
 
 <div id="credits">

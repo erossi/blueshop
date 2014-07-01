@@ -83,8 +83,7 @@ class MailUtils:
         return(ok)
 
     def shop_checkout(self, tpldata):
-        """
-        Send the order to the customer and the company.
+        """ Send the order to the customer and the company.
         """
         # Create a text/plain message
         msg = template('mail/shop_send_order', tpldata=tpldata)
@@ -94,8 +93,7 @@ class MailUtils:
         msg['Subject'] = self._config.mail['neworder_subject']
         bcc = (self._config.mail['neworder_bcc'], msg['To'])
         composed = msg.as_string()
-        ok = self._send(msg['from'], bcc, composed)
-        return(ok)
+        return(self._send(msg['from'], bcc, composed))
 
     def pricelists(self, filetosend, emails, subject, msg):
         outer = MIMEMultipart()

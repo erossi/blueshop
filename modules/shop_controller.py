@@ -1,4 +1,21 @@
 #!/usr/bin/env python
+# coding: utf-8
+
+# Copyright (C) 2012, 2014 Enrico Rossi
+# This file is part of Blueshop.
+#
+# Blueshop is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Blueshop is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Blueshop. If not, see <http://www.gnu.org/licenses/>.
 
 import sqlite3
 import time
@@ -8,9 +25,6 @@ class Shop:
     """A simple example class"""
 
     _secret = 'changeme'
-
-    # the mail controller
-    _mail = None
 
     # the shopping carts is a tuple composed by uid as a key and
     # the items
@@ -24,9 +38,8 @@ class Shop:
     # the config object
     _config = None
 
-    def __init__(self, db, mail, config):
+    def __init__(self, db, config):
         self._shopdb = db
-        self._mail = mail
         self._config = config
         self.charts = {0: {0: 'placeholder'}}
 
@@ -88,23 +101,13 @@ class Shop:
         return template('store/shoppingcart', tpldata=pdata)
 
     def checkout(self, userinfo):
+        """
+        """
         flash = {'error':None, 'notice':None}
         mycart = self.charts[userinfo['id']]
-        items = self._shopdb.get_all_cart_items(mycart, userinfo['listino']);
-        pdata = {'user':userinfo, 'mycart':mycart, 'items':items}
-
-        if self._mail.shop_checkout(pdata):
-            # clear the cart
-            self.chart_del(userinfo['id'])
-            flash['notice'] = 'Ordine completato con successo.'
-            pdata = {'user':userinfo, 'mycart':{}, 'items':{},
-                    'flash':flash}
-        else:
-            flash['error'] = 'Ci sono stati errori di sperizione'
-            pdata = {'user':userinfo, 'mycart':mycart, 'items':items,
-                    'flash':flash}
-
-        return template('store/shoppingcart', tpldata=pdata)
+        items = self._shopdb.get_all_cart_items(mycart, \
+                userinfo['listino']);
+        return({'user':userinfo, 'mycart':mycart, 'items':items})
 
     def download_pricelist(self, pricelist):
         if pricelist == 1:

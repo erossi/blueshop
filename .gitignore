@@ -7,4 +7,4 @@ db/shop.sqlite3
 db/users.sqlite3
 dist/
 doc/html/
-test/
+tmp/
