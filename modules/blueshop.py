@@ -1,47 +1,53 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # coding: utf-8
 
-# Copyright (C) 2012 Enrico Rossi
+# Copyright (C) 2012, 2014 Enrico Rossi
+# This file is part of Blueshop.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published
-# by the Free Software Foundation, either version 3 of the License, or
+# Blueshop is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
+# Blueshop is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
+# GNU General Public License for more details.
 #
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License
+# along with Blueshop. If not, see <http://www.gnu.org/licenses/>.
 
-"""
-BluShop python release.
+""" BlueShop python release.
 """
 
 __author__ = "Enrico Rossi <e.rossi@tecnobrain.com>"
-__date__ = "20 Feb 2012"
 __credits__ = """ Blue Tech Informatica s.r.l. """
 
 import os
 import sys
-from bottle import Bottle, TEMPLATE_PATH
-from bottle import route, run, template, get, post, request, response
-from bottle import redirect, static_file, debug
+import bottle
 
 # Please patch this to fit your installation.
-# It is required that all the modules are found by the application.
-import blueshop
-module_path = os.path.dirname(blueshop.__file__)
+# Configuration file path
+if os.getenv('BLUESHOP_PATH'):
+    modules_path = os.getenv('BLUESHOP_PATH')
+else:
+    modules_path = '/opt/blueshop'
+
 sys.path.insert(0, module_path)
 
-from blueshop import config, version
-from blueshop import admin_controller, parser_controller, mail_controller
-from blueshop import users_controller, shop_controller
+from blueshop import _version_, _lastupdate_
+from blueshop import _tagged_version_, _git_version_
+from blueshop import config
+from blueshop import admin_controller
+from blueshop import parser_controller
+from blueshop import mail_controller
+from blueshop import users_controller
+from blueshop import shop_controller
 from blueshop import shop_model, user_model
 
-__version__ = version._version_
+__version__ = _version_
+__last_update__ = _lastupdate_
 
 # object definition
 config = config.Config()
@@ -53,15 +59,18 @@ shop = shop_controller.Shop(shopdb, mail, config)
 admin = admin_controller.Admin(shopdb, config)
 fieldparser = parser_controller.FieldParser()
 
-# Activate debug mode
-if os.getenv('BLUESHOP_DEBUG'):
-    debug(True)
+# Set the _debug vars. and the bottle debug env.
+_debug = config.site['debug']
+
+if _debug:
+    print 'DEBUG enabled.'
+    bottle.debug(True)
 
 # Define template path
 template_path = os.path.join(config.path['base'], 'views')
 overlay_path = os.path.join(config.path['overlay'], 'views')
-TEMPLATE_PATH.insert(0, template_path)
-TEMPLATE_PATH.insert(0, overlay_path)
+bottle.TEMPLATE_PATH.insert(0, template_path)
+bottle.TEMPLATE_PATH.insert(0, overlay_path)
 
 #
 # Local functions
@@ -101,17 +110,15 @@ def auth(fn):
 
     return wrapper
 
-#
 # Create the bottle object
-#
-
-app = Bottle()
+# Called application for wsgi compatibility
+application = bottle.Bottle()
 
 #
 # Main route
 #
 
-@app.route('/')
+@application.route('/')
 def index():
     cookie = _auth()
 
@@ -125,19 +132,19 @@ def index():
 
     return (tplpage)
 
-@app.route('/main/contacts')
+@application.route('/main/contacts')
 def main_contacts():
     return template('main/contacts')
 
-@app.route('/main/about')
+@application.route('/main/about')
 def main_about():
     return template('main/about')
 
-@app.route('/main/recover_password', method='get')
+@application.route('/main/recover_password', method='get')
 def recover_password():
     return template('main/recover_password', flash=None)
 
-@app.route('/main/recover_password', method='post')
+@application.route('/main/recover_password', method='post')
 def recover_password_submit():
     email = request.forms.get('email')
     piva = request.forms.get('piva')
@@ -156,7 +163,7 @@ def recover_password_submit():
 # Admin route
 #
 
-@app.route('/admin/index', method='get')
+@application.route('/admin/index', method='get')
 def adm_index():
     cookie = _admin_auth()
 
@@ -169,7 +176,7 @@ def adm_index():
 
     return (tplpage)
 
-@app.route('/admin/index', method='post')
+@application.route('/admin/index', method='post')
 def adm_index_post():
     cookie = _admin_auth()
 
@@ -190,7 +197,7 @@ def adm_index_post():
 
     return (tplpage)
 
-@app.route('/admin/items', method='get')
+@application.route('/admin/items', method='get')
 def adm_items():
     cookie = _admin_auth()
 
@@ -201,7 +208,7 @@ def adm_items():
 
     return (tplpage)
 
-@app.route('/admin/items', method='post')
+@application.route('/admin/items', method='post')
 def adm_items_post():
     cookie = _admin_auth()
 
@@ -220,7 +227,7 @@ def adm_items_post():
 
     return (tplpage)
 
-@app.route('/admin/upload_csv_pricelist', method='post')
+@application.route('/admin/upload_csv_pricelist', method='post')
 def adm_upload_csv_pricelist():
     cookie = _admin_auth()
 
@@ -242,7 +249,7 @@ def adm_upload_csv_pricelist():
 
     return (tplpage)
 
-@app.route('/admin/upload_csv_promo', method='post')
+@application.route('/admin/upload_csv_promo', method='post')
 def adm_upload_csv_promo():
     """
     Upload the promo csv file.
@@ -270,7 +277,7 @@ def adm_upload_csv_promo():
 
     return (tplpage)
 
-@app.route('/admin/upload_pricelist', method='post')
+@application.route('/admin/upload_pricelist', method='post')
 def adm_upl_pricelists():
     cookie = _admin_auth()
 
@@ -300,7 +307,7 @@ def adm_upl_pricelists():
 
     return (tplpage)
 
-@app.route('/admin/users', method='get')
+@application.route('/admin/users', method='get')
 def adm_users():
     cookie = _admin_auth()
 
@@ -311,7 +318,7 @@ def adm_users():
 
     return (tplpage)
 
-@app.route('/admin/users', method='post')
+@application.route('/admin/users', method='post')
 def adm_users():
     cookie = _admin_auth()
 
@@ -336,7 +343,7 @@ def adm_users():
 
     return (tplpage)
 
-@app.route('/admin/changeuser', method='get')
+@application.route('/admin/changeuser', method='get')
 def adm_chuser():
     cookie = _admin_auth()
 
@@ -350,7 +357,7 @@ def adm_chuser():
 
     return (tplpage)
 
-@app.route('/admin/changeuser', method='post')
+@application.route('/admin/changeuser', method='post')
 def adm_chuser():
     cookie = _admin_auth()
 
@@ -391,7 +398,7 @@ def adm_chuser():
 
     return (tplpage)
 
-@app.route('/admin/rmuser', method='get')
+@application.route('/admin/rmuser', method='get')
 def adm_chuser():
     cookie = _admin_auth()
 
@@ -403,7 +410,7 @@ def adm_chuser():
 
     return (tplpage)
 
-@app.route('/admin/pricelists', method='get')
+@application.route('/admin/pricelists', method='get')
 def adm_pricelists():
     cookie = _admin_auth()
 
@@ -414,7 +421,7 @@ def adm_pricelists():
 
     return (tplpage)
 
-@app.route('/admin/pricelists', method='post')
+@application.route('/admin/pricelists', method='post')
 def adm_mail_pricelists():
     cookie = _admin_auth()
 
@@ -429,7 +436,7 @@ def adm_mail_pricelists():
 
     return (tplpage)
 
-@app.route('/admin/download_pricelist', method='get')
+@application.route('/admin/download_pricelist', method='get')
 def adm_down_pl():
     cookie = _admin_auth()
 
@@ -442,7 +449,7 @@ def adm_down_pl():
                     download=filename,
                     mimetype=config.pricelists['mimetype'])
 
-@app.route('/admin/promo', method='get')
+@application.route('/admin/promo', method='get')
 def adm_promo():
     cookie = _admin_auth()
 
@@ -453,7 +460,7 @@ def adm_promo():
 
     return (tplpage)
 
-@app.route('/admin/promo', method='post')
+@application.route('/admin/promo', method='post')
 def adm_mail_promo():
     cookie = _admin_auth()
 
@@ -472,11 +479,11 @@ def adm_mail_promo():
 # User route
 #
 
-@app.route('/user/login', method='get')
+@application.route('/user/login', method='get')
 def login_form():
     return template('user/login', error=None)
 
-@app.route('/user/login', method='post')
+@application.route('/user/login', method='post')
 def login_submit():
     email = request.forms.get('email')
     password = request.forms.get('password')
@@ -490,12 +497,12 @@ def login_submit():
     else:
         return template('user/login', error="Login failed!")
 
-@app.route('/user/add', method='get')
+@application.route('/user/add', method='get')
 def user_add_get():
     tpldata = fieldparser.user_add(None)
     return template('user/add', tpldata=tpldata)
 
-@app.route('/user/add', method='post')
+@application.route('/user/add', method='post')
 def user_add_post():
     """ Add a new user """
 
@@ -511,7 +518,7 @@ def user_add_post():
 
     return template('user/add', tpldata=newuser)
 
-@app.route('/user/modify', method='get')
+@application.route('/user/modify', method='get')
 @auth
 def user_modify(cookie):
     uid = user.uid(cookie)
@@ -520,7 +527,7 @@ def user_modify(cookie):
     user_info['flash'] = None
     return (template('user/modify', tpldata=user_info))
 
-@app.route('/user/modify', method='post')
+@application.route('/user/modify', method='post')
 def user_modify():
     cookie = _auth()
 
@@ -553,7 +560,7 @@ def user_modify():
 
     return (tplpage)
 
-@app.route('/user/rmuser', method='get')
+@application.route('/user/rmuser', method='get')
 def user_del():
     cookie = _auth()
 
@@ -564,7 +571,7 @@ def user_del():
     user.logout()
     return redirect('/')
 
-@app.route('/user/logout')
+@application.route('/user/logout')
 def logout():
     cookie = _auth()
 
@@ -579,7 +586,7 @@ def logout():
 # Shop route
 #
 
-@app.route('/shop/index', method='get')
+@application.route('/shop/index', method='get')
 def shop_index():
     cookie = _auth()
 
@@ -590,7 +597,7 @@ def shop_index():
 
     return (tplpage)
 
-@app.route('/shop/index', method='post')
+@application.route('/shop/index', method='post')
 def shop_index_submit():
     cookie = _auth()
 
@@ -603,7 +610,7 @@ def shop_index_submit():
 
     return (tplpage)
 
-@app.route('/shop/buy')
+@application.route('/shop/buy')
 def shop_buy_article():
     # check if it is an ajax request
     if request.is_ajax:
@@ -619,7 +626,7 @@ def shop_buy_article():
         else:
             return('shit') # redirect to somewhere
 
-@app.route('/shop/show')
+@application.route('/shop/show')
 def show_item():
     cookie = _auth()
 
@@ -632,7 +639,7 @@ def show_item():
 
     return (tplpage)
 
-@app.route('/shop/cart', method='get')
+@application.route('/shop/cart', method='get')
 def shop_cart():
     cookie = _auth()
 
@@ -646,7 +653,7 @@ def shop_cart():
 
     return (tplpage)
 
-@app.route('/shop/cart', method='post')
+@application.route('/shop/cart', method='post')
 def shop_cart():
     cookie = _auth()
 
@@ -662,7 +669,7 @@ def shop_cart():
 
     return (tplpage)
 
-@app.route('/shop/checkout', method='post')
+@application.route('/shop/checkout', method='post')
 def shop_checkout():
     cookie = _auth()
 
@@ -677,7 +684,7 @@ def shop_checkout():
 
     return (tplpage)
 
-@app.route('/shop/download_pricelist')
+@application.route('/shop/download_pricelist')
 def shop_download_pl():
     cookie = _auth()
 
@@ -689,7 +696,7 @@ def shop_download_pl():
                     download=config.pricelists['filename'],
                     mimetype=config.pricelists['mimetype'])
 
-@app.route('/shop/support')
+@application.route('/shop/support')
 def shop_support():
     cookie = _auth()
 
@@ -700,7 +707,7 @@ def shop_support():
 
     return (tplpage)
 
-@app.route('/shop/info')
+@application.route('/shop/info')
 def shop_info():
     cookie = _auth()
 
@@ -711,7 +718,7 @@ def shop_info():
 
     return (tplpage)
 
-@app.route('/shop/contacts')
+@application.route('/shop/contacts')
 def shop_contacts():
     cookie = _auth()
 
@@ -723,7 +730,7 @@ def shop_contacts():
     return (tplpage)
 
 # Images route
-@app.route('/images/<filename:re:.*\.png>')
+@application.route('/images/<filename:re:.*\.png>')
 def send_image(filename):
     basepath = os.path.join(config.path['base'], 'images')
     mypath = os.path.join(config.path['overlay'], 'images')
@@ -735,7 +742,7 @@ def send_image(filename):
 
 
 # Static pages and files to be served.
-@app.route('/static/<filename:path>')
+@application.route('/static/<filename:path>')
 def send_static(filename):
     basepath = os.path.join(config.path['base'], 'static')
     mypath = os.path.join(config.path['overlay'], 'static')
@@ -744,6 +751,52 @@ def send_static(filename):
         return static_file(filename, root=mypath)
     else:
         return static_file(filename, root=basepath)
+
+#
+# Errors
+#
+@application.error(401)
+def callback(error):
+    """ UnAuthorized
+    """
+    before_request()
+
+    if user.auth():
+        tplobj.login=True
+
+    # set the BC
+    tplobj.set_breadcrumbs(title = tplobj.gettext('Error 401'))
+
+    if _debug:
+        print 'Main ERROR 401'
+
+    return(bottle.template('e401', tplobj=tplobj))
+
+@application.error(404)
+def callback(error):
+    """ File Not Found
+    """
+    before_request()
+
+    if user.auth():
+        tplobj.login=True
+
+    # set the BC
+    tplobj.set_breadcrumbs(title = tplobj.gettext('Error 404'))
+
+    if _debug:
+        print 'Main ERROR 404'
+
+    return(bottle.template('e404', tplobj=tplobj))
+
+
+#
+# Main, internal webserver used for test only.
+#
+if __name__ == "__main__":
+    bottle.run(application, host=config.site['glossary_host'], \
+            port=config.site['glossary_port'])
+
 
 if __name__ == "__main__":
     #run(host='localhost', port=8080, reloader=True)
