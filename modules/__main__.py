@@ -36,14 +36,14 @@ else:
 
 sys.path.insert(0, modules_path)
 
-from modules import _version_, _lastupdate_
-from modules import _tagged_version_, _git_version_
-from modules import config
-from modules import admin_controller
-from modules import parser_controller
-from modules import user_controller
-from modules import shop_controller
-from modules import shop_model
+from blueshop import _version_, _lastupdate_
+from blueshop import _tagged_version_, _git_version_
+from blueshop import config
+from blueshop import admin_controller
+from blueshop import parser_controller
+from blueshop import user_controller
+from blueshop import shop_controller
+from blueshop import shop_model
 
 __version__ = _version_
 __last_update__ = _lastupdate_

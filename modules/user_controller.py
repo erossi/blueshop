@@ -20,7 +20,7 @@
 import time
 from bottle import request, response, template
 import user_model
-from modules import mail_controller
+from blueshop import mail_controller
 
 # the cookie is in the form of:
 # [{'id': int, 'ragsoc': u'text', 'email': u'@text', 'listino': int,
