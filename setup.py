@@ -63,10 +63,10 @@ def list_data_files():
     """ Create the data_files list for setup.
     """
     data_files = [
-        ('db', glob(os.path.join('./db', '*.dump'))),
-        ('private', ['private/stock.xls', 'private/vip.xls',
-            'private/eu.xls']),
-        ('etc', ['cfg/blueshop.cfg', 'cfg/mail_pricelist.txt',
+        ('/var/lib/blueshop/db', glob(os.path.join('./db', '*.dump'))),
+        ('/var/lib/blueshop/private', ['private/stock.xls',
+            'private/vip.xls', 'private/eu.xls']),
+        ('/etc/blueshop', ['cfg/blueshop.cfg', 'cfg/mail_pricelist.txt',
             'cfg/mail_promo.txt', 'cfg/blueshop.vhost']),
         ('images', ['images/favicon.ico']),
         ('static', glob(os.path.join('./static', 'x*'))),
@@ -74,9 +74,9 @@ def list_data_files():
             glob(os.path.join('./static/javascripts', '*.js'))),
         ('static/stylesheets',
             glob(os.path.join('./static/stylesheets', '*.css'))),
-        ('doc',
+        ('/usr/share/doc/blueshop',
             glob(os.path.join('doc', '*.txt'))),
-        ('doc/example',
+        ('/usr/share/doc/blueshop/example',
             glob(os.path.join('doc/example', '*')))
         ]
 

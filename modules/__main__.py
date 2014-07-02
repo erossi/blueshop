@@ -27,14 +27,8 @@ import os
 import sys
 import bottle
 
-# Please patch this to fit your installation.
-# Configuration file path
-if os.getenv('BLUESHOP_PATH'):
-    modules_path = os.getenv('BLUESHOP_PATH')
-else:
-    modules_path = '/opt/blueshop'
-
-sys.path.insert(0, modules_path)
+# Configuration file path - Debian version
+sys.path.insert(0, '/usr/share/blueshop')
 
 from blueshop import _version_, _lastupdate_
 from blueshop import _tagged_version_, _git_version_
