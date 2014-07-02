@@ -24,9 +24,8 @@ override_dh_auto_install:
 		debian/blueshop/usr/share/doc/blueshop/changelog.gz
 	sed --in-place \
 		's/\(^_version_ = "\).*$$/\1$(DEB_VERSION) debian"/g' \
-		debian/blueshop/usr/share/blueshop/version.py
+		debian/blueshop/usr/share/blueshop/__init__.py
 	rm debian/blueshop/usr/share/*.egg-info
-	rm debian/blueshop/usr/share/blueshop/__init__.py
 
 override_dh_auto_doc:
 	dh $@
