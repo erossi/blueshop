@@ -1,0 +1,20 @@
+Source: blueshop
+Maintainer: Enrico Rossi <e.rossi@tecnobrain.com>
+Section: python
+Priority: optional
+Build-Depends: python2.7 (>= 2.7), debhelper (>= 7)
+Standards-Version: 3.9.1
+X-Python-Version: >= 2.7
+Homepage: http://tecnobrain.com/blueshop
+
+Package: blueshop
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, python-bottle (>= 0.10), python-bottle (<< 0.11)
+Description: Yet Another tiny web shop
+ This software aim to be useful for those small company in which the main
+ tools for e-commerce is email and spreadsheet.
+ It is based on the bottle micro-framework, developed as MVC with
+ sqlite3 as DB.
+ .
+ The software have to be run in single thread http server or in
+ stand-alone.
