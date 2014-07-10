@@ -16,9 +16,10 @@ override_dh_auto_clean:
 	rm -rf build/
 
 override_dh_auto_install:
-	python setup.py install --no-compile --root=debian/blueshop \
+	python setup.py install --no-compile \
+		--root=debian/blueshop \
+		--install-layout=deb \
 		--install-lib=/usr/share \
-		--install-scripts=/usr/share/blueshop \
 		--prefix=/usr/share/blueshop
 	git log | gzip -9 > \
 		debian/blueshop/usr/share/doc/blueshop/changelog.gz

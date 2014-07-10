@@ -1,5 +1,6 @@
-blueshop (0.4-1) UNRELEASED; urgency=low
+blueshop (0.3-1) UNRELEASED; urgency=low
 
-  * source package automatically created by stdeb 0.4
+  [ Enrico Rossi ]
+  * source package automatically created by stdeb
 
  -- Enrico Rossi <e.rossi@tecnobrain.com>  Wed, 02 Jul 2014 16:00:01 +0200
