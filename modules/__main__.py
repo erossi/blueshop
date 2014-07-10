@@ -66,8 +66,7 @@ if _debug:
 # Define template path
 template_path = os.path.join(config.path['base'], 'views')
 overlay_path = os.path.join(config.path['overlay'], 'views')
-bottle.TEMPLATE_PATH.insert(0, template_path)
-bottle.TEMPLATE_PATH.insert(0, overlay_path)
+bottle.TEMPLATE_PATH = [overlay_path, template_path]
 
 #
 # Local functions

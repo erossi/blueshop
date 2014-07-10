@@ -4,8 +4,9 @@
 	ServerAdmin webmaster@localhost
 	# Put your server name here
 	ServerName blueshop.local
+	ServerAlias www.blueshop.local
 
-	WSGIDaemonProcess blueshop user=www-data group=www-data processes=2 threads=15 python-path=/opt/blueshop
+	WSGIDaemonProcess blueshop user=www-data group=www-data processes=1 threads=1 python-path=/opt/blueshop
 
 	# Aliases for jQuery, jQuery-ui and TinyMCE
 	# Fix with your installation path.
@@ -34,7 +35,7 @@
 		Allow from all
 	</Directory>
 
-	<Directory /opt/blueshop/modules>
+	<Directory /opt/blueshop/blueshop>
 		# Options +FollowSymLinks
 		WSGIProcessGroup blueshop
 		WSGIApplicationGroup %{GLOBAL}
