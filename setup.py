@@ -67,7 +67,7 @@ def list_data_files():
         ('private', ['private/stock.xls', 'private/vip.xls',
             'private/eu.xls']),
         ('etc', ['cfg/blueshop.cfg', 'cfg/mail_pricelist.txt',
-            'cfg/mail_promo.txt']),
+            'cfg/mail_promo.txt', 'cfg/blueshop.vhost']),
         ('images', ['images/favicon.ico']),
         ('static', glob(os.path.join('./static', 'x*'))),
         ('static/javascripts',
@@ -97,6 +97,7 @@ setup(name='blueshop',
         packages=['blueshop'],
         package_dir={'blueshop': 'modules'},
         data_files=list_data_files(),
-        cmdclass={'sdist':SdistOverride})
+        )
+#        cmdclass={'sdist':SdistOverride})
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
