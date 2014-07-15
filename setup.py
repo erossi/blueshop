@@ -74,7 +74,6 @@ def list_data_files():
             glob(os.path.join('./static/javascripts', '*.js'))),
         ('static/stylesheets',
             glob(os.path.join('./static/stylesheets', '*.css'))),
-#        ('tools', ['tools/update_search_engine.py']),
         ('doc',
             glob(os.path.join('doc', '*.txt'))),
         ('doc/example',

@@ -59,9 +59,12 @@ fieldparser = parser_controller.FieldParser()
 # Set the _debug vars. and the bottle debug env.
 _debug = config.site['debug']
 
-if _debug:
+if _debug == 'true':
+    _debug = True
     print 'DEBUG enabled.'
     bottle.debug(True)
+else:
+    _debug = False
 
 # Define template path
 template_path = os.path.join(config.path['base'], 'views')
