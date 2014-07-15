@@ -1,15 +1,17 @@
 Source: blueshop
-Maintainer: Enrico Rossi <e.rossi@tecnobrain.com>
 Section: python
 Priority: optional
+Maintainer: Enrico Rossi <e.rossi@tecnobrain.com>
 Build-Depends: python2.7 (>= 2.7), debhelper (>= 7)
 Standards-Version: 3.9.1
+Vcs-Git: http://tecnobrain.com/git/blueshop.git
+Vcs-browser: http://enricorossi.org/gitweb/?p=blueshop.git;a=summary
 X-Python-Version: >= 2.7
 Homepage: http://tecnobrain.com/blueshop
 
 Package: blueshop
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python-bottle (>= 0.10), python-bottle (<< 0.11)
+Depends: ${misc:Depends}, ${python:Depends}, python-bottle (>= 0.10), python-bottle (<< 0.11), libjs-jquery-ui, libjs-jquery, tinymce
 Description: Yet Another tiny web shop
  This software aim to be useful for those small company in which the main
  tools for e-commerce is email and spreadsheet.

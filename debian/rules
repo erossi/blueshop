@@ -18,16 +18,14 @@ override_dh_auto_clean:
 override_dh_auto_install:
 	python setup.py install --no-compile \
 		--root=debian/blueshop \
-		--install-layout=deb \
-		--install-lib=/usr/share \
-		--prefix=/usr/share/blueshop
+		--prefix=/usr/share/blueshop \
+		--install-lib=/usr/share/blueshop \
+		--install-script=/usr/share/blueshop \
+		--install-layout=deb
+
 	git log | gzip -9 > \
 		debian/blueshop/usr/share/doc/blueshop/changelog.gz
 	sed --in-place \
 		's/\(^_version_ = "\).*$$/\1$(DEB_VERSION) debian"/g' \
-		debian/blueshop/usr/share/blueshop/__init__.py
-	rm debian/blueshop/usr/share/*.egg-info
-
-override_dh_auto_doc:
-	dh $@
+		debian/blueshop/usr/share/blueshop/blueshop/__init__.py
 

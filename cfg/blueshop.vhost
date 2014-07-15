@@ -6,10 +6,11 @@
 	ServerName blueshop.local
 	ServerAlias www.blueshop.local
 
-	WSGIDaemonProcess blueshop user=www-data group=www-data processes=1 threads=1 python-path=/opt/blueshop
+	# Keep the processes and threads to 1 or it does not work.
+	WSGIDaemonProcess blueshop user=www-data group=www-data processes=1 threads=1 python-path=/usr/share/blueshop
 
 	# Aliases for jQuery, jQuery-ui and TinyMCE
-	# Fix with your installation path.
+	# Debian path.
 	Alias /static/javascripts/jquery.js /usr/share/javascript/jquery/jquery.js
 	Alias /static/javascripts/jquery-ui.js /usr/share/javascript/jquery-ui/jquery-ui.min.js
 	Alias /static/stylesheets/jquery-ui /usr/share/javascript/jquery-ui/css/smoothness/
@@ -19,7 +20,7 @@
 	# Alias /favicon.ico /opt/blueshop/images/favicon.ico
 	# Alias /static /opt/blueshop/static
 	# Alias /images /opt/blueshop/images
-	WSGIScriptAlias / /opt/blueshop/blueshop/__main__.py
+	WSGIScriptAlias / /usr/share/blueshop/blueshop/__main__.py
 
 	<Directory />
 		Options FollowSymLinks
@@ -36,7 +37,7 @@
 	# 	Allow from all
 	# </Directory>
 
-	<Directory /opt/blueshop/blueshop>
+	<Directory /usr/share/blueshop/blueshop>
 		# Options +FollowSymLinks
 		WSGIProcessGroup blueshop
 		WSGIApplicationGroup %{GLOBAL}

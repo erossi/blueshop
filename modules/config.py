@@ -28,10 +28,7 @@ class Config:
     and store it in various Class attributes.
     """
 
-    if os.getenv('BLUESHOP_CFG'):
-        _config_path = (os.getenv('BLUESHOP_CFG'),)
-    else:
-        _config_path = ('/opt/blueshop/etc', )
+    _config_path = ('/etc/blueshop', )
 
     print "Configurations path: " + str(_config_path)
 
