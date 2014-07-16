@@ -3,13 +3,22 @@
     <note priority="high" time="1401453250">
         missign parsing registration form update on all fields.
     </note>
+    <note priority="high" time="1405499138">
+        debug control all the output: ex. FIXME: Admin check should not relay on ..
+    </note>
     <note priority="medium" time="1401451540">
         bug: FIXME version should be aligned right and fixed.
+    </note>
+    <note priority="medium" time="1405498808">
+        recomends: sqlite3
     </note>
     <note priority="low" time="1401451502">
         bottom icons should be centered in the page.
     </note>
     <note priority="low" time="1401453355">
         top label with user's info aligned to the right.
+    </note>
+    <note priority="low" time="1405498791">
+        suggest: mod-wsgi
     </note>
 </todo>

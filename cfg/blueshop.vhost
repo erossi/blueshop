@@ -15,9 +15,10 @@
 	Alias /static/stylesheets/jquery-ui /usr/share/javascript/jquery-ui/css/smoothness/
 	Alias /static/javascripts/tinymce /usr/share/tinymce/www
 
-	Alias /favicon.ico /opt/blueshop/images/favicon.ico
-	Alias /static /opt/blueshop/static
-	Alias /images /opt/blueshop/images
+	# Can't do this or you will render the overlay useless.
+	# Alias /favicon.ico /opt/blueshop/images/favicon.ico
+	# Alias /static /opt/blueshop/static
+	# Alias /images /opt/blueshop/images
 	WSGIScriptAlias / /opt/blueshop/blueshop/__main__.py
 
 	<Directory />
@@ -25,15 +26,15 @@
 		AllowOverride None
 	</Directory>
 
-	<Directory /opt/blueshop/static>
-		Order deny,allow
-		Allow from all
-	</Directory>
+	# <Directory /opt/blueshop/static>
+	# 	Order deny,allow
+	# 	Allow from all
+	# </Directory>
 
-	<Directory /opt/blueshop/images>
-		Order deny,allow
-		Allow from all
-	</Directory>
+	# <Directory /opt/blueshop/images>
+	# 	Order deny,allow
+	# 	Allow from all
+	# </Directory>
 
 	<Directory /opt/blueshop/blueshop>
 		# Options +FollowSymLinks
