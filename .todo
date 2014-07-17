@@ -1,24 +1,63 @@
 <?xml version="1.0"?>
 <todo version="0.1.20">
-    <note priority="high" time="1401453250">
+    <note priority="veryhigh" time="1334761580" done="1338979614">
+        Make secret for cookie configurable somewhere.
+    </note>
+    <note priority="veryhigh" time="1333627899">
+        bug: recover password by piva not working.
+    </note>
+    <note priority="veryhigh" time="1334311622">
+        BUG: If there is an undecodeable chars in any field system crash, take as an example the uid 646.
+    </note>
+    <note priority="veryhigh" time="1337358194">
+        bug: using non-7bit letters in database modification crash, like à. Should something be parsed with utf-8 somewhere like in the registration forms?
+    </note>
+    <note priority="high" time="1328092664">
+        change adduser sequence to request -&gt; verify -&gt; request -&gt; confirm
+    </note>
+    <note priority="high" time="1333627699">
+        user search should split all the words and join them as: like '%word1%' or like '%word2%' etc...
+    </note>
+    <note priority="high" time="1334307790">
+        bug: search for a user with 0 results should not present the whole list of users.
+    </note>
+    <note priority="high" time="1335516646">
+        set and use logger to report errors.
+    </note>
+    <note priority="high" time="1338978843">
+        check for compatibile config file version.
+    </note>
+    <note priority="high" time="1379755017">
+        print also last 3 login in admin users modify interface even when No logins has been performed.
+    </note>
+    <note priority="high" time="1405603369">
         missign parsing registration form update on all fields.
     </note>
-    <note priority="high" time="1405499138">
+    <note priority="high" time="1405603489">
         debug control all the output: ex. FIXME: Admin check should not relay on ..
     </note>
-    <note priority="medium" time="1401451540">
+    <note priority="medium" time="1328092546">
+        Define a more restrictive password policy
+    </note>
+    <note priority="medium" time="1332940655">
+        BUG: art[13] image path is a path or an image or what
+    </note>
+    <note priority="medium" time="1362585114">
+        bug: deb: import path missing. Only if the blueshop main is among the library modules it works.
+    </note>
+    <note priority="medium" time="1405603406">
         bug: FIXME version should be aligned right and fixed.
     </note>
-    <note priority="medium" time="1405498808">
-        recomends: sqlite3
+    <note priority="low" time="1346161249">
+        add news section in login page.
     </note>
-    <note priority="low" time="1401451502">
+    <note priority="low" time="1405603420">
         bottom icons should be centered in the page.
     </note>
-    <note priority="low" time="1401453355">
+    <note priority="low" time="1405603434">
         top label with user's info aligned to the right.
     </note>
-    <note priority="low" time="1405498791">
-        suggest: mod-wsgi
+    <note priority="low" time="1405603448">
+        whole site should be centered in the page.
     </note>
 </todo>
