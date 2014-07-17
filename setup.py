@@ -64,8 +64,6 @@ def list_data_files():
     """
     data_files = [
         ('/var/lib/blueshop/db', glob(os.path.join('./db', '*.dump'))),
-        ('/var/lib/blueshop/private', ['private/stock.xls',
-            'private/vip.xls', 'private/eu.xls']),
         ('/etc/blueshop', ['cfg/blueshop.cfg', 'cfg/mail_pricelist.txt',
             'cfg/mail_promo.txt', 'cfg/blueshop.vhost']),
         ('images', ['images/favicon.ico']),

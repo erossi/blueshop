@@ -1,1 +1,2 @@
 var/lib/blueshop/overlay
+var/lib/blueshop/private

@@ -1,3 +1,12 @@
+blueshop (0.3-2) UNRELEASED; urgency=low
+
+  [ Enrico Rossi ]
+  * Fix apache vhost.
+  * removed private files installation, to avoid overwrite on updating.
+
+
+ -- Enrico Rossi <e.rossi@tecnobrain.com>  Wed, 16 Jul 2014 14:01:34 +0200
+
 blueshop (0.3-1) UNRELEASED; urgency=low
 
   [ Enrico Rossi ]

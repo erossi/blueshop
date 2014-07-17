@@ -12,6 +12,7 @@ Homepage: http://tecnobrain.com/blueshop
 Package: blueshop
 Architecture: all
 Depends: ${misc:Depends}, ${python:Depends}, python-bottle (>= 0.10), python-bottle (<< 0.11), libjs-jquery-ui, libjs-jquery, tinymce
+Suggests: sqlite3
 Description: Yet Another tiny web shop
  This software aim to be useful for those small company in which the main
  tools for e-commerce is email and spreadsheet.
