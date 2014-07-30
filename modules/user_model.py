@@ -1,15 +1,152 @@
 #!/usr/bin/env python
+# coding: utf-8
 
-import sqlite3
+# Copyright (C) 2012, 2014 Enrico Rossi
+# This file is part of Blueshop.
+#
+# Blueshop is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Blueshop is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Blueshop. If not, see <http://www.gnu.org/licenses/>.
+
+import os
 import time
+import hashlib
+from datetime import datetime
+from sqlalchemy import *
+from sqlalchemy.orm import sessionmaker, scoped_session, aliased
+from sqlalchemy.ext.declarative import declarative_base
 
-class UserDb:
+# FIXME Remove me once sqlalchemy works
+import sqlite3
+
+# FIXME add memcache support
+#import memcache_model
+
+UserBase = declarative_base()
+LoginBase = declarative_base()
+
+class Users(UserBase):
     """
-    The user model class.
+    """
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    code = Column(String(length=15, convert_unicode=True),
+            nullable = False)
+    company = Column(String(length=255, convert_unicode=True),
+            nullable = False)
+    vat_code = Column(String(length=15, convert_unicode=True),
+            nullable = False)
+    owner = Column(String(length=255, convert_unicode=True),
+            nullable = False)
+    email = Column(String(length=255), nullable = False)
+    password = Column(String(length=255), nullable = False)
+    address = Column(String(length=255, convert_unicode=True),
+            nullable = False)
+    city = Column(String(length=255, convert_unicode=True),
+            nullable = False)
+    region = Column(String(length=255, convert_unicode=True),
+            nullable = False)
+    postal = Column(String(length=255, convert_unicode=True),
+            nullable = False)
+    country = Column(String(length=255, convert_unicode=True),
+            nullable = False)
+    phone = Column(String(length=255, convert_unicode=True),
+            default=False)
+    fax = Column(String(length=255, convert_unicode=True),
+            default=False)
+    address2 = Column(String(length=255, convert_unicode=True),
+            default=False)
+    city2 = Column(String(length=255, convert_unicode=True),
+            default=False)
+    region2 = Column(String(length=255, convert_unicode=True),
+            default=False)
+    postal2 = Column(String(length=255, convert_unicode=True),
+            default=False)
+    country2 = Column(String(length=255, convert_unicode=True),
+            default=False)
+    phone2 = Column(String(length=255, convert_unicode=True),
+            default=False)
+    fax2 = Column(String(length=255, convert_unicode=True),
+            default=False)
+    comment = Column(TEXT, default=False)
+    email_valid = Column(Boolean, default=True)
+    email_pricelist = Column(Boolean, default=True)
+    email_promo = Column(Boolean, default=True)
+    disabled = Column(Boolean, default=True)
+    web_access = Column(Boolean, default=True)
+    admin = Column(Boolean, default=False)
+    pricelist = Column(Integer, default=0)
+    created = Column(DateTime)
+    last_update = Column(DateTime)
+
+    def __init__(self, code, company, vat_code, owner, email, password, \
+            address, city, region, postal, country):
+        """
+        """
+        self.code = code
+        self.company = company
+        self.vat_code = vat_code
+        self.owner = owner
+        self.email = email
+        self.password = password
+        self.address = address
+        self.city = city
+        self.region = region
+        self.postal = postal
+        self.country = country
+
+
+class Logins(LoginBase):
+    """
+    """
+    __tablename__ = 'logins'
+    loginid = Column(Integer, primary_key=True)
+    email = Column(String(length=255, convert_unicode=True),
+            nullable = False)
+    date = Column(DateTime)
+
+    def __init__(self, email, utctime):
+        """
+        """
+        self.email = email
+        self.date = utctime
+
+
+class UserDb(object):
+    """ The user model class (to be removed).
 
     All the user DB operations pass from here.
     """
 
+    # Db attributes
+    _userdb_engine = None
+    _logindb_engine = None
+    _session_user = None
+    _session_login = None
+    users = Users
+    logins = Logins
+
+    # MemCache obj (to be implemented)
+    _mc = None
+
+    # user attributes (to be implemented)
+    _user = {}
+    _sessid = None
+    _sessttl = None
+    _debug = False
+    # fixed flag level
+    _administrator = False
+
+    # Deprecated old sqlite direct attributes.
     _conn = None
     _cur = None
     _config = None
@@ -20,6 +157,8 @@ class UserDb:
     users['paginate'] = 5
 
     def _adjust_cursors(self, cursor, total):
+        """
+        """
         self.users['first'] = cursor
         self.users['last'] = self.users['first'] + len(self.users['list'])
         self.users['last'] -= 1 
@@ -34,6 +173,8 @@ class UserDb:
             self.users['next'] = 0
 
     def _update_attributes(self):
+        """
+        """
         self._cur.execute("select count(*) from users")
         self.users['total'] = self._cur.fetchone()[0]
 
@@ -61,14 +202,62 @@ class UserDb:
                 where email_promo = 't'")
         self.users['promo'] = self._cur.fetchone()[0]
 
-    def __init__(self, config):
+    def __init__(self, config, createdb=False):
+        """
+        """
+        self._debug = config.site['debug']
+
+        if self._debug:
+            print "UM config path: ", config.path
+#            self._userdb_engine = create_engine('sqlite:///' + \
+#                    os.path.join(config.path['db'], config.db['users']),
+#                    echo=True, echo_pool=True)
+            self._logindb_engine = create_engine('sqlite:///' + \
+                    os.path.join(config.path['db'], config.db['logins']),
+                    echo=True, echo_pool=True)
+        else:
+#            self._userdb_engine = create_engine('sqlite:///' + \
+#                    os.path.join(config.path['db'], config.db['users']))
+            self._logindb_engine = create_engine('sqlite:///' + \
+                    os.path.join(config.path['db'], config.db['logins']))
+
+        # Create the db if requested
+        if createdb:
+#            UserBase.metadata.create_all(self._userdb_engine)
+            LoginBase.metadata.create_all(self._logindb_engine)
+
+#        session_factory_users = sessionmaker(bind=self._userdb_engine)
+        session_factory_login = sessionmaker(bind=self._logindb_engine)
+#        self._session_user = scoped_session(session_factory_users)
+        self._session_login = scoped_session(session_factory_login)
+
+        # memcache session should expire later than the cookie.
+        if 'session_ttl' in config.users:
+            self._sessttl = int(config.users['session_ttl'])
+        elif 'cookie_timeout' in config.users:
+            self._sessttl = int(config.users['cookie_timeout'])
+        else:
+            self._sessttl = 300
+
+        # self._mc = memcache_model.MemCache(config, "um_", self._sessttl)
+
+        # Old sqlite direct access to be removed.
         self._config = config
         self.users['paginate'] = int(self._config.users['paginate'])
+
         self._conn = sqlite3.connect(self._config.db['users'])
         self._cur = self._conn.cursor()
         self._update_attributes()
 
     def __del__(self):
+        """
+        """
+#        self._session_user.remove()
+        self._session_login.remove()
+#        self._userdb_engine.dispose()
+        self._logindb_engine.dispose()
+
+        # Old sqlite to be removed
         self._conn.close()
 
     def check_login(self, username, password):
@@ -86,20 +275,28 @@ class UserDb:
 
         return (myuser)
 
-    def record_login(self, record):
-        self._cur.execute("insert into logins values (?,?,?,?)", record)
-        self._conn.commit()
+    def record_login(self, username):
+        """ Record the login in the logins database.
+        """
+        self._session_login.add(Logins(username, datetime.utcnow()))
+        self._session_login.commit()
 
     def recover_password(self, email, piva):
         self._cur.execute("select email, password from users where \
                 email=? or piva=?", (email, piva))
         return (self._cur.fetchone())
 
-    def _get_last_logins(self, uid):
-        self._cur.execute("select created_at from logins where user_id=? \
-                order by created_at DESC LIMIT 3", (uid,))
-        result = self._cur.fetchall()
-        return(result)
+    def _get_last_logins(self, email):
+        """ Get the last 3 logins for the user.
+
+        select created_at from logins where user_id=email \
+                order by created_at DESC LIMIT 3;
+        """
+        query = self._session_login.query(Logins.date)
+        query = query.filter(Logins.email == email)
+        query = query.order_by(Logins.date.desc())
+        query = query.limit(3)
+        return(query.all())
 
     def get_all_infos(self, uid):
         self._cur.execute("select * from users where id = ?", (uid,))
@@ -110,7 +307,7 @@ class UserDb:
             for idx, col in enumerate(self._cur.description):
                 myuser[col[0]] = rawuser[idx]
 
-            myuser['logins'] = self._get_last_logins(uid)
+            myuser['logins'] = self._get_last_logins(myuser['email'])
 
         return (myuser)
 

@@ -42,7 +42,7 @@ class User:
         """
         """
         self._config = config
-        self._db = user_model.UserDb(config)
+        self._db = user_model.UserDb(config, createdb=True)
         self._mail = mail_controller.MailUtils(config)
 
         if 'cookie_secret' in self._config.users:
@@ -126,10 +126,7 @@ class User:
             # append the default category selected.
             cookie = [myuser, 1]
             self.set_cookie(cookie)
-            # record the login date
-            now = time.strftime('%Y-%m-%d %H:%M:%S')
-            record = (None, myuser['id'], now, None)
-            self._db.record_login(record)
+            self._db.record_login(username)
 
         return (myuser)
 
