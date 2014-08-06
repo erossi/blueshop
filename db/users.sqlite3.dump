@@ -1,9 +1,39 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
-CREATE TABLE "logins" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer DEFAULT NULL NULL, "created_at" datetime DEFAULT NULL NULL, "updated_at" datetime DEFAULT NULL NULL);
-CREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "codice" varchar(15) NOT NULL, "ragsoc" varchar(50) NOT NULL, "piva" varchar(15) NOT NULL, "respcom" varchar(50) NOT NULL, "email" varchar(50) NOT NULL, "email_valid" boolean DEFAULT 't' NULL, "email_listino" boolean DEFAULT 't' NULL, "sede_via" varchar(50) DEFAULT NULL NULL, "sede_civico" varchar(10) DEFAULT NULL NULL, "sede_citta" varchar(50) DEFAULT NULL NULL, "sede_prov" varchar(10) DEFAULT NULL NULL, "sede_cap" varchar(10) DEFAULT NULL NULL, "sede_tel" varchar(50) DEFAULT NULL NULL, "sede_fax" varchar(50) DEFAULT NULL NULL, "sede_stato" varchar(50) DEFAULT NULL NULL, "sede_via_2" varchar(50) DEFAULT NULL NULL, "sede_civico_2" varchar(10) DEFAULT NULL NULL, "sede_citta_2" varchar(50) DEFAULT NULL NULL, "sede_prov_2" varchar(10) DEFAULT NULL NULL, "sede_cap_2" varchar(10) DEFAULT NULL NULL, "sede_tel_2" varchar(50) DEFAULT NULL NULL, "sede_fax_2" varchar(50) DEFAULT NULL NULL, "sede_stato_2" varchar(50) DEFAULT NULL NULL, "attivita" text DEFAULT NULL NULL, "status" varchar(1) DEFAULT 'r' NOT NULL, "web_access" boolean DEFAULT 'f' NULL, "email_promo" boolean DEFAULT 't' NULL, "password" varchar(10) NOT NULL, "listino" integer DEFAULT 4 NOT NULL, "admin" boolean DEFAULT 'f' NULL, "created_at" datetime DEFAULT NULL NULL, "updated_at" datetime DEFAULT NULL NULL);
+CREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+ "codice" varchar(15) NOT NULL,
+ "ragsoc" varchar(50) NOT NULL,
+ "piva" varchar(15) NOT NULL,
+ "respcom" varchar(50) NOT NULL,
+ "email" varchar(50) NOT NULL,
+ "email_valid" boolean DEFAULT 't' NULL,
+ "email_listino" boolean DEFAULT 't' NULL,
+ "sede_via" varchar(50) DEFAULT NULL NULL,
+ "sede_civico" varchar(10) DEFAULT NULL NULL,
+ "sede_citta" varchar(50) DEFAULT NULL NULL,
+ "sede_prov" varchar(10) DEFAULT NULL NULL,
+ "sede_cap" varchar(10) DEFAULT NULL NULL,
+ "sede_tel" varchar(50) DEFAULT NULL NULL,
+ "sede_fax" varchar(50) DEFAULT NULL NULL,
+ "sede_stato" varchar(50) DEFAULT NULL NULL,
+ "sede_via_2" varchar(50) DEFAULT NULL NULL,
+ "sede_civico_2" varchar(10) DEFAULT NULL NULL,
+ "sede_citta_2" varchar(50) DEFAULT NULL NULL,
+ "sede_prov_2" varchar(10) DEFAULT NULL NULL,
+ "sede_cap_2" varchar(10) DEFAULT NULL NULL,
+ "sede_tel_2" varchar(50) DEFAULT NULL NULL,
+ "sede_fax_2" varchar(50) DEFAULT NULL NULL,
+ "sede_stato_2" varchar(50) DEFAULT NULL NULL,
+ "attivita" text DEFAULT NULL NULL,
+ "status" varchar(1) DEFAULT 'r' NOT NULL,
+ "web_access" boolean DEFAULT 'f' NULL,
+ "email_promo" boolean DEFAULT 't' NULL,
+ "password" varchar(10) NOT NULL,
+ "listino" integer DEFAULT 4 NOT NULL,
+ "admin" boolean DEFAULT 'f' NULL,
+ "created_at" datetime DEFAULT NULL NULL,
+ "updated_at" datetime DEFAULT NULL NULL);
 INSERT INTO "users" VALUES(1,'1','admin','1','Admin name','admin@mysite.org','t','t','via strada 1','1','citta1','PR','10100','1234','5678','Italia','via strada 2','2','citta2','PR','10101','4321','8765','Italia','attivita varie','a','t','t','admin1234',1,'t','2002-01-14 14:03:13','2012-03-26 13:23:47');
 DELETE FROM sqlite_sequence;
-INSERT INTO "sqlite_sequence" VALUES('logins',0);
 INSERT INTO "sqlite_sequence" VALUES('users',1);
 COMMIT;
