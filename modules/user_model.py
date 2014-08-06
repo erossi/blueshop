@@ -40,42 +40,42 @@ class Users(UserBase):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
     code = Column(String(length=15, convert_unicode=True),
-            nullable = False)
-    company = Column(String(length=255, convert_unicode=True),
-            nullable = False)
-    vat_code = Column(String(length=15, convert_unicode=True),
-            nullable = False)
-    owner = Column(String(length=255, convert_unicode=True),
-            nullable = False)
-    email = Column(String(length=255), nullable = False)
-    password = Column(String(length=255), nullable = False)
-    address = Column(String(length=255, convert_unicode=True),
-            nullable = False)
-    city = Column(String(length=255, convert_unicode=True),
-            nullable = False)
-    region = Column(String(length=255, convert_unicode=True),
-            nullable = False)
-    postal = Column(String(length=255, convert_unicode=True),
-            nullable = False)
-    country = Column(String(length=255, convert_unicode=True),
-            nullable = False)
-    phone = Column(String(length=255, convert_unicode=True),
+            nullable=False)
+    company = Column(String(length=100, convert_unicode=True),
+            nullable=False)
+    vat_code = Column(String(length=50, convert_unicode=True),
+            nullable=False)
+    ceo = Column(String(length=100, convert_unicode=True),
+            nullable=False)
+    email = Column(String(length=100), nullable=False)
+    password = Column(String(length=20), nullable=False)
+    address = Column(String(length=100, convert_unicode=True),
+            nullable=False)
+    city = Column(String(length=100, convert_unicode=True),
             default=False)
-    fax = Column(String(length=255, convert_unicode=True),
+    region = Column(String(length=100, convert_unicode=True),
             default=False)
-    address2 = Column(String(length=255, convert_unicode=True),
+    postal = Column(String(length=50, convert_unicode=True),
+            nullable = False)
+    country = Column(String(length=100, convert_unicode=True),
+            nullable = False)
+    phone = Column(String(length=50, convert_unicode=True),
             default=False)
-    city2 = Column(String(length=255, convert_unicode=True),
+    fax = Column(String(length=50, convert_unicode=True),
             default=False)
-    region2 = Column(String(length=255, convert_unicode=True),
+    address2 = Column(String(length=100, convert_unicode=True),
             default=False)
-    postal2 = Column(String(length=255, convert_unicode=True),
+    city2 = Column(String(length=100, convert_unicode=True),
             default=False)
-    country2 = Column(String(length=255, convert_unicode=True),
+    region2 = Column(String(length=100, convert_unicode=True),
             default=False)
-    phone2 = Column(String(length=255, convert_unicode=True),
+    postal2 = Column(String(length=50, convert_unicode=True),
             default=False)
-    fax2 = Column(String(length=255, convert_unicode=True),
+    country2 = Column(String(length=100, convert_unicode=True),
+            default=False)
+    phone2 = Column(String(length=50, convert_unicode=True),
+            default=False)
+    fax2 = Column(String(length=50, convert_unicode=True),
             default=False)
     comment = Column(TEXT, default=False)
     email_valid = Column(Boolean, default=True)
@@ -84,18 +84,18 @@ class Users(UserBase):
     disabled = Column(Boolean, default=True)
     web_access = Column(Boolean, default=True)
     admin = Column(Boolean, default=False)
-    pricelist = Column(Integer, default=0)
+    pricelist = Column(Integer, default=4)
     created = Column(DateTime)
     last_update = Column(DateTime)
 
-    def __init__(self, code, company, vat_code, owner, email, password, \
+    def __init__(self, code, company, vat_code, ceo, email, password, \
             address, city, region, postal, country):
         """
         """
         self.code = code
         self.company = company
         self.vat_code = vat_code
-        self.owner = owner
+        self.ceo = ceo
         self.email = email
         self.password = password
         self.address = address
@@ -111,7 +111,7 @@ class Logins(LoginBase):
     __tablename__ = 'logins'
     loginid = Column(Integer, primary_key=True)
     email = Column(String(length=255, convert_unicode=True),
-            nullable = False)
+            nullable=False)
     date = Column(DateTime)
 
     def __init__(self, email, utctime):
