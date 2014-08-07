@@ -25,9 +25,6 @@ from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker, scoped_session, aliased
 from sqlalchemy.ext.declarative import declarative_base
 
-# FIXME Remove me once sqlalchemy works
-import sqlite3
-
 # FIXME add memcache support
 #import memcache_model
 
@@ -143,12 +140,7 @@ class UserDb(object):
     _sessid = None
     _sessttl = None
     _debug = False
-    # fixed flag level
     _administrator = False
-
-    # Deprecated old sqlite direct attributes.
-    _conn = None
-    _cur = None
     _config = None
 
     # Attribute Users present in the db.
@@ -156,6 +148,7 @@ class UserDb(object):
     # sane defaults if not specified in the cfg file.
     users['paginate'] = 5
 
+    # FIXME the cursor should be an object with in proper methods
     def _adjust_cursors(self, cursor, total):
         """
         """
@@ -172,35 +165,40 @@ class UserDb(object):
         if self.users['next'] >= total:
             self.users['next'] = 0
 
+    # FIXME multithread non-safe !!! this should be memcached.
     def _update_attributes(self):
         """
         """
-        self._cur.execute("select count(*) from users")
-        self.users['total'] = self._cur.fetchone()[0]
+        query_base = self._session_user.query(Users)
+        self.users['total'] = query_base.count()
 
-        self._cur.execute("select count(*) from users where listino = 1")
-        self.users['price1'] = self._cur.fetchone()[0]
+        # select count(*) from users where listino = 1
+        query = query_base.filter(Users.pricelist == 1)
+        self.users['price1'] = query.count()
 
-        self._cur.execute("select count(*) from users where listino = 2")
-        self.users['price2'] = self._cur.fetchone()[0]
+        # select count(*) from users where listino = 2
+        query = query_base.filter(Users.pricelist == 2)
+        self.users['price2'] = query.count()
 
-        self._cur.execute("select count(*) from users where listino = 3")
-        self.users['price3'] = self._cur.fetchone()[0]
+        # select count(*) from users where listino = 3
+        query = query_base.filter(Users.pricelist == 3)
+        self.users['price3'] = query.count()
 
-        self._cur.execute("select count(*) from users where listino = 4")
-        self.users['price4'] = self._cur.fetchone()[0]
+        # select count(*) from users where listino = 4
+        query = query_base.filter(Users.pricelist == 4)
+        self.users['price4'] = query.count()
 
-        self._cur.execute("select count(*) from users \
-                where email_valid = 't'")
-        self.users['email'] = self._cur.fetchone()[0]
+        # select count(*) from users where email_valid = 't'
+        query = query_base.filter(Users.email_valid == True)
+        self.users['email'] = query.count()
 
-        self._cur.execute("select count(*) from users \
-                where web_access = 't'")
-        self.users['www'] = self._cur.fetchone()[0]
+        # select count(*) from users where web_access = 't'
+        query = query_base.filter(Users.web_access == True)
+        self.users['www'] = query.count()
 
-        self._cur.execute("select count(*) from users \
-                where email_promo = 't'")
-        self.users['promo'] = self._cur.fetchone()[0]
+        # select count(*) from users where email_promo = 't'
+        query = query_base.filter(Users.email_promo == True)
+        self.users['promo'] = query.count()
 
     def __init__(self, config, createdb=False):
         """
@@ -209,26 +207,26 @@ class UserDb(object):
 
         if self._debug:
             print "UM config path: ", config.path
-#            self._userdb_engine = create_engine('sqlite:///' + \
-#                    os.path.join(config.path['db'], config.db['users']),
-#                    echo=True, echo_pool=True)
+            self._userdb_engine = create_engine('sqlite:///' + \
+                    os.path.join(config.path['db'], config.db['users']),
+                    echo=True, echo_pool=True)
             self._logindb_engine = create_engine('sqlite:///' + \
                     os.path.join(config.path['db'], config.db['logins']),
                     echo=True, echo_pool=True)
         else:
-#            self._userdb_engine = create_engine('sqlite:///' + \
-#                    os.path.join(config.path['db'], config.db['users']))
+            self._userdb_engine = create_engine('sqlite:///' + \
+                    os.path.join(config.path['db'], config.db['users']))
             self._logindb_engine = create_engine('sqlite:///' + \
                     os.path.join(config.path['db'], config.db['logins']))
 
         # Create the db if requested
         if createdb:
-#            UserBase.metadata.create_all(self._userdb_engine)
+            UserBase.metadata.create_all(self._userdb_engine)
             LoginBase.metadata.create_all(self._logindb_engine)
 
-#        session_factory_users = sessionmaker(bind=self._userdb_engine)
+        session_factory_users = sessionmaker(bind=self._userdb_engine)
         session_factory_login = sessionmaker(bind=self._logindb_engine)
-#        self._session_user = scoped_session(session_factory_users)
+        self._session_user = scoped_session(session_factory_users)
         self._session_login = scoped_session(session_factory_login)
 
         # memcache session should expire later than the cookie.
@@ -241,24 +239,20 @@ class UserDb(object):
 
         # self._mc = memcache_model.MemCache(config, "um_", self._sessttl)
 
-        # Old sqlite direct access to be removed.
         self._config = config
         self.users['paginate'] = int(self._config.users['paginate'])
 
-        self._conn = sqlite3.connect(self._config.db['users'])
-        self._cur = self._conn.cursor()
+        # FIXME non multithread safe!!!!
+        # use memcache
         self._update_attributes()
 
     def __del__(self):
         """
         """
-#        self._session_user.remove()
+        self._session_user.remove()
         self._session_login.remove()
-#        self._userdb_engine.dispose()
+        self._userdb_engine.dispose()
         self._logindb_engine.dispose()
-
-        # Old sqlite to be removed
-        self._conn.close()
 
     def check_login(self, username, password):
         """ Check username and password """
